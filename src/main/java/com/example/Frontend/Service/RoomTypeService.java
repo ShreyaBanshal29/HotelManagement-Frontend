@@ -14,7 +14,7 @@ public class RoomTypeService {
     @Autowired
     private RestTemplate restTemplate;
 
-    private final String BASE_URL = "http://localhost:8085/api/roomtypes";
+    private final String BASE_URL = "http://localhost:8081/api/roomtypes";
 
     public RoomTypeResponse getRoomTypes(int page) {
     	String url = BASE_URL + "?page=" + page + "&size=20";

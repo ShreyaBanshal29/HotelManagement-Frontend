@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotels</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 40px auto; background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .page-header h1 { font-size: 1.8em; font-weight: 700; color: #111; }
+        .btn-add { padding: 9px 20px; background: #1a73e8; color: white; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: 600; }
+        .btn-add:hover { background: #1558b0; }
+        .location-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; background: #f0f4ff; border: 1px solid #d0dbff; border-radius: 8px; padding: 14px 18px; flex-wrap: wrap; }
+        .location-bar label { font-size: 14px; font-weight: 600; color: #333; }
+        .location-bar input { padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; min-width: 250px; flex: 1; }
+        .location-bar input:focus { outline: none; border-color: #1a73e8; }
+        .btn-go { padding: 8px 22px; background: #1a73e8; color: white; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; font-weight: 600; }
+        .btn-go:hover { background: #1558b0; }
+        .showing { font-size: 13px; color: #555; }
+        .showing strong { color: #1a73e8; }
+        table { width: 100%; border-collapse: collapse; }
+        thead tr { background: #f0f0f0; }
+        th { padding: 13px 16px; text-align: left; font-size: 14px; font-weight: 600; color: #333; border-bottom: 1px solid #e0e0e0; }
+        td { padding: 13px 16px; font-size: 14px; border-bottom: 1px solid #eee; color: #444; }
+        tbody tr:hover { background: #fafafa; }
+        .hotel-link { color: #1a73e8; text-decoration: none; font-weight: 500; }
+        .hotel-link:hover { text-decoration: underline; }
+        .btn-edit { background: #f5a623; color: white; padding: 6px 16px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 600; display: inline-block; }
+        .btn-edit:hover { background: #d4891a; }
+        .empty-msg { text-align: center; padding: 50px; color: #999; font-size: 15px; }
+        .pagination { display: flex; justify-content: center; gap: 6px; margin-top: 24px; flex-wrap: wrap; }
+        .pagination a { padding: 7px 13px; border: 1px solid #ddd; color: #333; text-decoration: none; border-radius: 4px; font-size: 14px; }
+        .pagination a:hover { background: #f0f0f0; }
+        .pagination a.active { background: #1a73e8; color: white; border-color: #1a73e8; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="page-header">
+        <h1>Hotels</h1>
+        <a th:href="@{/hotels/add(location=${location})}" class="btn-add">+ Add Hotel</a>
+    </div>
+    
+    <form th:action="@{/hotels}" method="get" class="location-bar">
+        <label>📍 City / Location:</label>
+        <input type="text" name="location" th:value="${location}" placeholder="Type a city or area and click Go...">
+        <button type="submit" class="btn-go">Go</button>
+        <span class="showing">Showing results for <strong th:text="${location}"></strong></span>
+    </form>
+    
+    <table>
+        <thead>
+            <tr><th>Hotel Name</th><th>Location</th><th>Description</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+            <tr th:each="h : ${hotels}">
+                <td><a th:href="@{'/hotels/edit/' + ${h.hotelId}(location=${location})}" th:text="${h.name}" class="hotel-link"></a></td>
+                <td th:text="${h.location}"></td>
+                <td th:text="${h.description}"></td>
+                <td><a th:href="@{'/hotels/edit/' + ${h.hotelId}(location=${location})}" class="btn-edit">Edit</a></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(hotels)}">
+                <td colspan="4" class="empty-msg">No hotels found for "<span th:text="${location}"></span>". Try a different location above.</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="pagination" th:if="${totalPages > 1}">
+        <a th:if="${currentPage > 0}" th:href="@{/hotels(page=${currentPage - 1}, location=${location})}">« Prev</a>
+        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+            <a th:href="@{/hotels(page=${i}, location=${location})}" th:text="${i + 1}" th:classappend="${i == currentPage} ? ' active' : ''"></a>
+        </span>
+        <a th:if="${currentPage < totalPages - 1}" th:href="@{/hotels(page=${currentPage + 1}, location=${location})}">Next »</a>
+    </div>
+</div>
+</body>
+</html>

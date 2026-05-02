@@ -1,8 +1,15 @@
 package com.example.Frontend.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Hotel {
 
+   
+    @JsonProperty("hotelId")
     private Integer hotelId;
+
     private String name;
     private String location;
     private String description;
@@ -36,17 +43,6 @@ public class Hotel {
     }
 
     public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Hotel() {
-    }
-
-    public Hotel(Integer hotelId, String name, String location, String description) {
-        super();
-        this.hotelId = hotelId;
-        this.name = name;
-        this.location = location;
         this.description = description;
     }
 }
