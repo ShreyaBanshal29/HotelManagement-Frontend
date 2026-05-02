@@ -14,14 +14,16 @@ public class RoomTypeService {
 
     private final String BASE_URL = "http://localhost:8085/api/roomtypes";
 
-    public RoomTypeResponse getRoomTypes(int page) {
-    	String url = BASE_URL + "?page=" + page + "&size=20";
-        RoomTypeResponse response =
-            restTemplate.getForObject(url, RoomTypeResponse.class);
+    public RoomTypeResponse searchAll(String name, Double price, Integer occupancy, int page) {
+    	String url = BASE_URL + "/search/searchAll?" +
+    	        (name != null ? "name=" + name + "&" : "") +
+    	        (price != null ? "price=" + price + "&" : "") +
+    	        (occupancy != null ? "occupancy=" + occupancy + "&" : "") +
+    	        "page=" + page+"&size=12";
 
-
-        return response;
+        return restTemplate.getForObject(url, RoomTypeResponse.class);
     }
+    
     public RoomType getRoomTypeById(int id) {
         String url = BASE_URL + "/" + id;
         RoomType room = restTemplate.getForObject(url, RoomType.class);
@@ -39,4 +41,5 @@ public class RoomTypeService {
             restTemplate.put(url, roomType);
         }
     }
+ 
 }	

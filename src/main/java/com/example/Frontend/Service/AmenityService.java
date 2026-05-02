@@ -13,7 +13,7 @@ public class AmenityService {
 	@Autowired
     private RestTemplate restTemplate;
 
-    private final String BASE_URL = "http://localhost:8086/api/amenities";
+    private final String BASE_URL = "http://localhost:8085/api/amenities";
 
     public AmenityResponse getAmenities(int page, String keyword) {
         String url;
