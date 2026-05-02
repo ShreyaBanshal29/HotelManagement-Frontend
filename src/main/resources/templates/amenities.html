@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Room Types</title>
+    <title>Amenities</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -68,6 +68,28 @@
             justify-content: space-between;
             align-items: center;
         }
+		
+		.search-bar {
+		    display: flex;
+		    margin-top: 15px;
+		}
+
+		.search-bar input {
+		    flex: 1;
+		    padding: 8px;
+		    border: 1px solid #ccc;
+		    border-right: none;
+		    border-radius: 4px 0 0 4px;
+		}
+
+		.search-bar button {
+		    padding: 8px 14px;
+		    border: 1px solid #007bff;
+		    background-color: #007bff;
+		    color: white;
+		    border-radius: 0 4px 4px 0;
+		    cursor: pointer;
+		}
 
         .pagination {
             margin-top: 20px;
@@ -86,48 +108,58 @@
 <div class="container">
 
     <div class="top-bar">
-        <h2>Room Types</h2>
-        <a th:href="@{/roomtypes/new}" class="btn btn-primary">+ Add Room Type</a>
+		<h2>
+		    <a th:href="@{/amenities}" style="text-decoration:none; color:black;">
+		        Amenities
+		    </a>
+		</h2>
+        <a th:href="@{/amenities/new}" class="btn btn-primary">+ Add Amenity</a>
     </div>
+	
+	<form th:action="@{/amenities}" method="get" class="search-bar">
+	    <input type="text" name="keyword"
+	           th:value="${keyword}"
+	           placeholder="Search amenities..." />
 
-    <table>
-        <thead>
-        <tr>
-			<th>Id</th>
-			<th>Name</th>
-            <th>Description</th>
-            <th>Price / Night</th>
-            <th>Max Occupancy</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
+	    <button type="submit" class="btn btn-primary">Search</button>
+	</form>
 
-        <tbody>
-			<tr th:each="room : ${roomTypes}"
-			    th:onclick="|window.location='rooms/byRoomId/' + ${room.roomTypeId}|"
-			    style="cursor:pointer;">
-			<td th:text="${room.roomTypeId}"></td>
-			<td th:text="${room.typeName}"></td>
-            <td th:text="${room.description}"></td>
-            <td th:text="${room.pricePerNight}"></td>
-            <td th:text="${room.maxOccupancy}"></td>
-			<td onclick="event.stopPropagation()">
-			    <a th:href="@{'/roomtypes/edit/' + ${room.roomTypeId}}" 
-			       class="btn btn-warning">Edit</a>
-			</td>
-        </tr>
-        </tbody>
-    </table>
+	<table>
+	    <thead>
+	    <tr>
+	        <th>Name</th>
+	        <th>Description</th>
+	        <th>Actions</th>
+	    </tr>
+	    </thead>
+
+		<tbody th:if="${amenities != null and !#lists.isEmpty(amenities.?[name != null])}">
+		    <tr th:each="am : ${amenities}" th:if="${am.name != null}">
+		        <td th:text="${am.name}"></td>
+		        <td th:text="${am.description}"></td>
+		        <td>
+		            <a th:href="@{'/amenities/edit/' + ${am.amenityId}}" 
+		               class="btn btn-warning">Edit</a>
+		        </td>
+		    </tr>
+		</tbody>
+		
+		<tbody th:if="${amenities == null or #lists.isEmpty(amenities.?[name != null])}">
+		    <tr>
+		        <td colspan="3" class="empty">No amenities found</td>
+		    </tr>
+		</tbody>
+	</table>
 
     <!-- Pagination -->
     <div class="pagination">
         <a th:if="${currentPage > 0}" 
-           th:href="@{/roomtypes(page=${currentPage - 1})}">Previous</a>
+           th:href="@{/amenities(page=${currentPage - 1})}">Previous</a>
 
         <span th:text="'Page ' + (${currentPage} + 1) + ' of ' + ${totalPages}"></span>
 
         <a th:if="${currentPage < totalPages - 1}" 
-           th:href="@{/roomtypes(page=${currentPage + 1})}">Next</a>
+           th:href="@{/amenities(page=${currentPage + 1})}">Next</a>
     </div>
 
 </div>
