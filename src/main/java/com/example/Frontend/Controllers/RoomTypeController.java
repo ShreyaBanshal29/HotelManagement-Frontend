@@ -1,7 +1,5 @@
 package com.example.Frontend.Controllers;
 
-import java.util.Collections;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,10 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.example.Frontend.Entities.Room;
 import com.example.Frontend.Entities.RoomType;
 import com.example.Frontend.Service.RoomTypeService;
-import com.example.Frontend.dtos.RoomResponse;
 import com.example.Frontend.dtos.RoomTypeResponse;
 
 @Controller
@@ -54,23 +50,5 @@ public class RoomTypeController {
         service.saveRoomType(roomType);
         return "redirect:/roomtypes";
     }
-    @GetMapping("/{id}")
-    public String getRoomsByRoomType(@PathVariable int id,
-                                    @RequestParam(defaultValue = "0") int page,
-                                    Model model) {
-
-        RoomResponse response = service.getRoomsByRoomType(page, id);
-        System.out.println(response.getRooms());
-
-        List<Room> rooms = (response != null && response.getRooms() != null)
-                ? response.getRooms()
-                : Collections.emptyList();
-
-        model.addAttribute("rooms", rooms);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", response.getPage().getTotalPages());
-        model.addAttribute("roomTypeId", id);
-
-        return "rooms";
-    }
+   
 }

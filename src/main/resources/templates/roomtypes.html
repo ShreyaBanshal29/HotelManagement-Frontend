@@ -104,7 +104,7 @@
 
         <tbody>
 			<tr th:each="room : ${roomTypes}"
-			    th:onclick="|window.location='/roomtypes/' + ${room.roomTypeId}|"
+			    th:onclick="|window.location='rooms/byRoomId/' + ${room.roomTypeId}|"
 			    style="cursor:pointer;">
 			<td th:text="${room.roomTypeId}"></td>
 			<td th:text="${room.typeName}"></td>

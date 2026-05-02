@@ -91,32 +91,34 @@
 <table>
 	<thead>
     <tr>
-        <th>ID</th>
         <th>Room Number</th>
         <th>Status</th>
 		<th>RoomType</th>
+		<th>Hotel Name</th>
+		<th>Location</th>
     </tr>
 	</thead>
 	<tbody>
 
     <tr th:each="room : ${rooms}">
-        <td th:text="${room.roomId}"></td>
         <td th:text="${room.roomNumber}"></td>
         <td th:text="${room.isAvailable}"></td>
-		<td th:text="${room.roomType != null ? room.roomType.typeName : 'N/A'}"></td>
+		<td th:text="${room.roomType != null ? room.roomType.typeName : ''}"></td>
+		<td th:text="${room.hotel != null ? room.hotel.name : ''}"></td>
+		<td th:text="${room.hotel != null ? room.hotel.location : ''}"></td>
     </tr>
 	</tbody>
 </table>
 <div class="pagination">
     <a th:if="${currentPage > 0}" 
-       th:href="@{'/roomtypes/' + ${roomTypeId}(page=${currentPage - 1})}">
+       th:href="@{'' + ${roomTypeId}(page=${currentPage - 1})}">
         Previous
     </a>
 
     <span th:text="'Page ' + (${currentPage} + 1)"></span>
 
     <a th:if="${currentPage < totalPages - 1}" 
-       th:href="@{'/roomtypes/' + ${roomTypeId}(page=${currentPage + 1})}">
+       th:href="@{'' + ${roomTypeId}(page=${currentPage + 1})}">
         Next
     </a>
 </div>
