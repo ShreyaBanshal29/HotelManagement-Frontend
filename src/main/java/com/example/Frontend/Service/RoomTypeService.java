@@ -24,8 +24,6 @@ public class RoomTypeService {
     	String url = BASE_URL + "?page=" + page + "&size=20";
         RoomTypeResponse response =
             restTemplate.getForObject(url, RoomTypeResponse.class);
-
-
         return response;
     }
 }	

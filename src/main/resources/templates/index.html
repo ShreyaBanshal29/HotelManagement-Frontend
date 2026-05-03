@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Our Team')}"></head>
+<body>
+
+<nav th:replace="~{fragments/base :: navbar}"></nav>
+
+<main>
+    <div class="page-wrapper">
+
+        <!-- Hero Header -->
+        <section class="team-hero">
+            <h1>Meet the Builders</h1>
+            <p>Six developers. One vision. A seamless hotel management experience.</p>
+            <div class="team-divider"></div>
+        </section>
+
+        <!-- Team Grid -->
+        <div class="team-grid">
+
+            <!-- Member 1 -->
+            <div class="member-card">
+                <div class="member-img-wrap">
+                    <div class="member-avatar-placeholder"><span>C</span></div>
+                </div>
+                <div class="member-info">
+                    <div class="member-role">Full Stack Developer</div>
+                    <div class="member-name">Member 1</div>
+                    <div class="member-focus">Reservations Module</div>
+                    <span class="member-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- Member 2 -->
+            <div class="member-card">
+                <div class="member-img-wrap">
+                    <div class="member-avatar-placeholder"><span>P</span></div>
+                </div>
+                <div class="member-info">
+                    <div class="member-role">Backend Developer</div>
+                    <div class="member-name">Member 2</div>
+                    <div class="member-focus">Room Module</div>
+                    <span class="member-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- Member 3 -->
+            <div class="member-card">
+                <div class="member-img-wrap">
+                    <div class="member-avatar-placeholder"><span>R</span></div>
+                </div>
+                <div class="member-info">
+                    <div class="member-role">Frontend Developer</div>
+                    <div class="member-name">Member 3</div>
+                    <div class="member-focus">Payments Module</div>
+                    <span class="member-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- Member 4 -->
+            <div class="member-card">
+                <div class="member-img-wrap">
+                    <div class="member-avatar-placeholder"><span>S</span></div>
+                </div>
+                <div class="member-info">
+                    <div class="member-role">Database Engineer</div>
+                    <div class="member-name">Member 4</div>
+                    <div class="member-focus">Reviews Module</div>
+                    <span class="member-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- Member 5 -->
+            <div class="member-card">
+                <div class="member-img-wrap">
+                    <div class="member-avatar-placeholder"><span>K</span></div>
+                </div>
+                <div class="member-info">
+                    <div class="member-role">DevOps Engineer</div>
+                    <div class="member-name">Member 5</div>
+                    <div class="member-focus">Amenities Module</div>
+                    <span class="member-arrow">→</span>
+                </div>
+            </div>
+
+            <!-- MY CARD — clickable → Hotels page -->
+            <a th:href="@{/hotels}" class="member-card my-card">
+                <div class="member-img-wrap">
+                    <!--
+                        To use your photo: place it in static/images/me.jpg
+                        and replace the placeholder below with:
+                        <img th:src="@{/images/me.jpg}" alt="Your Name" />
+                    -->
+                    <div class="member-avatar-placeholder"><span>T</span></div>
+                </div>
+                <div class="member-info">
+                    <div class="member-role">Lead Developer</div>
+                    <div class="member-name">Tryambakesh Satish</div>
+                    <div class="member-focus">RoomType Module Owner</div>
+                    <span class="member-arrow">→</span>
+                </div>
+            </a>
+
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/base :: footer}"></footer>
+</body>
+</html>

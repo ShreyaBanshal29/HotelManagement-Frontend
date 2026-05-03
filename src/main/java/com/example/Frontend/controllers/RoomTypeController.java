@@ -1,4 +1,4 @@
-package com.example.Frontend.Controllers;
+package com.example.Frontend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +26,6 @@ public class RoomTypeController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", response.getPage().getTotalPages());
 
-        return "roomtypes";
+        return "index";
     }
 }
