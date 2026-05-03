@@ -2,13 +2,36 @@ package com.example.Frontend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 public class AppConfig {
 
     @Bean
     public RestTemplate restTemplate() {
-        return new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
+
+        for (HttpMessageConverter<?> converter : restTemplate.getMessageConverters()) {
+            if (converter instanceof MappingJackson2HttpMessageConverter) {
+
+                MappingJackson2HttpMessageConverter jacksonConverter =
+                        (MappingJackson2HttpMessageConverter) converter;
+
+                List<MediaType> mediaTypes =
+                        new ArrayList<>(jacksonConverter.getSupportedMediaTypes());
+
+                mediaTypes.add(MediaType.parseMediaType("application/hal+json"));
+
+                jacksonConverter.setSupportedMediaTypes(mediaTypes);
+            }
+        }
+
+        return restTemplate;
     }
 }
