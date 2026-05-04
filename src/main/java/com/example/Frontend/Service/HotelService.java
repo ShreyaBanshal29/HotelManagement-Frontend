@@ -1,6 +1,7 @@
 package com.example.Frontend.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -17,10 +18,11 @@ public class HotelService {
 
     @Autowired
     private RestTemplate restTemplate;
-
-    private final String BASE_URL = "http://localhost:8085/api/hotels";
+    @Value("${backend.base-url}")
+    String baseUrl;
 
     public HotelResponse getAllHotels(int page) {
+    	String BASE_URL = baseUrl + "/hotels";
         URI uri = UriComponentsBuilder
                 .fromUriString(BASE_URL)
                 .queryParam("page", page)
@@ -32,6 +34,7 @@ public class HotelService {
     }
 
     public HotelResponse searchByLocation(String location, int page) {
+    	String BASE_URL = baseUrl + "/hotels";
         URI uri = UriComponentsBuilder
                 .fromUriString(BASE_URL + "/search/findByLocation")
                 .queryParam("location", location.trim())
@@ -50,6 +53,7 @@ public class HotelService {
     }
 
     public HotelResponse searchByName(String name, int page) {
+    	String BASE_URL = baseUrl + "/hotels";
         URI uri = UriComponentsBuilder
                 .fromUriString(BASE_URL + "/search/findByName")
                 .queryParam("name", name)
@@ -63,6 +67,7 @@ public class HotelService {
 
     // ✅ YOUR ROBUST METHOD HERE
     public Hotel getHotelById(Integer id) {
+    	String BASE_URL = baseUrl + "/hotels";
         if (id == null) {
             throw new IllegalArgumentException("Hotel ID cannot be null");
         }
@@ -119,6 +124,7 @@ public class HotelService {
     }
 
     public void updateHotel(Integer id, Hotel hotel) {
+    	String BASE_URL = baseUrl + "/hotels";
         String url = BASE_URL + "/" + id;
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -136,6 +142,7 @@ public class HotelService {
     }
 
     public void addHotel(Hotel hotel) {
+    	String BASE_URL = baseUrl + "/hotels";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         

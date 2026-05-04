@@ -24,7 +24,7 @@
         th { padding: 13px 16px; text-align: left; font-size: 14px; font-weight: 600; color: #333; border-bottom: 1px solid #e0e0e0; }
         td { padding: 13px 16px; font-size: 14px; border-bottom: 1px solid #eee; color: #444; }
         tbody tr:hover { background: #fafafa; }
-        .hotel-link { color: #1a73e8; text-decoration: none; font-weight: 500; }
+        .hotel-link { color: #1a73e8; text-decoration: none; font-weight: 500; cursor: pointer; }
         .hotel-link:hover { text-decoration: underline; }
         .btn-edit { background: #f5a623; color: white; padding: 6px 16px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 600; display: inline-block; }
         .btn-edit:hover { background: #d4891a; }
@@ -55,13 +55,22 @@
         </thead>
         <tbody>
             <tr th:each="h : ${hotels}">
-                <td><a th:href="@{'/hotels/edit/' + ${h.hotelId}(location=${location})}" th:text="${h.name}" class="hotel-link"></a></td>
+                <td>
+                    <!-- Hotel name links to reviews page with location parameter -->
+					<a th:href="@{'/hotels/' + ${h.hotelId} + '/reviews'(location=${location})}" 
+					   th:text="${h.name}" class="hotel-link"></a>
+                </td>
                 <td th:text="${h.location}"></td>
                 <td th:text="${h.description}"></td>
-                <td><a th:href="@{'/hotels/edit/' + ${h.hotelId}(location=${location})}" class="btn-edit">Edit</a></td>
+                <td>
+                    <a th:href="@{'/hotels/edit/' + ${h.hotelId}(location=${location})}" class="btn-edit">Edit</a>
+                </td>
             </tr>
             <tr th:if="${#lists.isEmpty(hotels)}">
-                <td colspan="4" class="empty-msg">No hotels found for "<span th:text="${location}"></span>". Try a different location above.</td>
+                <td colspan="4" class="empty-msg">
+                    No hotels found for "<span th:text="${location}"></span>". 
+                    Try a different location above.
+                </td>
             </tr>
         </tbody>
     </table>
@@ -69,7 +78,9 @@
     <div class="pagination" th:if="${totalPages > 1}">
         <a th:if="${currentPage > 0}" th:href="@{/hotels(page=${currentPage - 1}, location=${location})}">« Prev</a>
         <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-            <a th:href="@{/hotels(page=${i}, location=${location})}" th:text="${i + 1}" th:classappend="${i == currentPage} ? ' active' : ''"></a>
+            <a th:href="@{/hotels(page=${i}, location=${location})}" 
+               th:text="${i + 1}" 
+               th:classappend="${i == currentPage} ? 'active' : ''"></a>
         </span>
         <a th:if="${currentPage < totalPages - 1}" th:href="@{/hotels(page=${currentPage + 1}, location=${location})}">Next »</a>
     </div>
