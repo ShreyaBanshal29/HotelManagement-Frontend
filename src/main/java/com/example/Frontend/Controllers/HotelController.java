@@ -9,7 +9,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.Frontend.Entities.Hotel;
+import com.example.Frontend.Entities.HotelAmenity;
+import com.example.Frontend.Entities.Room;
 import com.example.Frontend.Service.HotelService;
+import com.example.Frontend.Service.RoomTypeService;
+import com.example.Frontend.dtos.HotelAmenityResponse;
 import com.example.Frontend.dtos.HotelResponse;
 
 @Controller
@@ -18,16 +22,19 @@ public class HotelController {
 
     @Autowired
     private HotelService service;
+    RoomTypeService rs;
 
     private static final String DEFAULT_LOCATION = "Mumbai";
 
     @GetMapping
     public String getHotels(@RequestParam(defaultValue = "0") int page,
                             @RequestParam(required = false) String location,
+                            @RequestParam(defaultValue = "reviews") String type,
                             Model model) {
 
         String activeLocation = (location != null && !location.trim().isEmpty())
-                ? location.trim() : DEFAULT_LOCATION;
+                ? location.trim()
+                : DEFAULT_LOCATION;
 
         HotelResponse response = service.searchByLocation(activeLocation, page);
 
@@ -45,14 +52,55 @@ public class HotelController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("location", activeLocation);
-
-        return "hotels";
+        model.addAttribute("type", type); // 🔥 KEY
+        
+        return "hotels-chirag";
     }
 
     @GetMapping("/add")
     public String showAddForm(@RequestParam(required = false) String location, Model model) {
         model.addAttribute("location", location != null ? location : DEFAULT_LOCATION);
         return "add-hotel";
+    }
+    @GetMapping("/{id}/rooms")
+    public String hotelRooms(@PathVariable Integer id,
+                             @RequestParam(required = false) String location,
+                             Model model) {
+
+        Hotel hotel = service.getHotelById(id);
+        List<Room> rooms = service.getRoomsByHotel(id);
+
+        model.addAttribute("hotel", hotel);
+        model.addAttribute("rooms", rooms);
+        model.addAttribute("location", location);
+
+        return "hotel-detail"; // 🔥 your HTML
+    }
+    @GetMapping("/{id}/amenities")
+    public String getAmenitiesByHotel(@PathVariable int id,
+    		@RequestParam(required = false) String location,
+                                    @RequestParam(defaultValue = "0") int page,
+                                    Model model) {
+
+        HotelAmenityResponse response =
+                service.getAmenitiesByHotel(page, id);
+
+        List<HotelAmenity> hotelAmenities =
+                (response != null && response.getContent() != null)
+                ? response.getContent()
+                : Collections.emptyList();
+        Hotel hotel = (!hotelAmenities.isEmpty())
+                ? hotelAmenities.get(0).getHotel()
+                : null;
+
+        model.addAttribute("hotel", hotel);
+        model.addAttribute("hotelAmenities", hotelAmenities);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", response.getPage().getTotalPages());
+        model.addAttribute("hotelId", id);
+        model.addAttribute("location", location);
+
+        return "hotel-amenities";
     }
 
     @PostMapping("/add")

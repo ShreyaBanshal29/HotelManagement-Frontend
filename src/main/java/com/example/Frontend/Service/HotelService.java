@@ -8,9 +8,13 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.example.Frontend.Entities.Hotel;
+import com.example.Frontend.Entities.Room;
+import com.example.Frontend.dtos.HotelAmenityResponse;
 import com.example.Frontend.dtos.HotelResponse;
+import com.example.Frontend.dtos.RoomPagedModel;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -155,5 +159,21 @@ public class HotelService {
         HttpEntity<Map<String, String>> entity = new HttpEntity<>(requestBody, headers);
         restTemplate.postForObject(BASE_URL, entity, Void.class);
         System.out.println("CREATED HOTEL");
+    }
+    public List<Room> getRoomsByHotel(Integer hotelId) {
+        String url = baseUrl + "/room/search/findByHotel_HotelId?hotelId=" + hotelId
+                + "&size=100";
+        RoomPagedModel model = restTemplate.getForObject(url, RoomPagedModel.class);
+        if (model == null) return List.of();
+        List<Room> rooms = model.getRooms();
+        return rooms != null ? rooms : List.of();
+    }
+    public HotelAmenityResponse getAmenitiesByHotel(int page, int hotelId) {
+
+        String url = baseUrl + "/hotelamenities/search/findByHotelHotelId?hotelId=" + hotelId + "&page=" + page + "&size=10";
+        HotelAmenityResponse response =
+                restTemplate.getForObject(url, HotelAmenityResponse.class);
+
+        return response;
     }
 }

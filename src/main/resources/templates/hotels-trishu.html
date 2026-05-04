@@ -39,10 +39,10 @@
 <div class="container">
     <div class="page-header">
         <h1>Hotels</h1>
-        <a th:href="@{/hotels/add(location=${location})}" class="btn-add">+ Add Hotel</a>
+        <a th:href="@{/hotels/chirag/add(location=${location})}" class="btn-add">+ Add Hotel</a>
     </div>
     
-    <form th:action="@{/hotels}" method="get" class="location-bar">
+    <form th:action="@{/hotels/chirag}" method="get" class="location-bar">
         <label>📍 City / Location:</label>
         <input type="text" name="location" th:value="${location}" placeholder="Type a city or area and click Go...">
         <button type="submit" class="btn-go">Go</button>
@@ -57,13 +57,13 @@
             <tr th:each="h : ${hotels}">
                 <td>
                     <!-- Hotel name links to reviews page with location parameter -->
-					<a th:href="@{'/hotels/' + ${h.hotelId} + '/reviews'(location=${location})}" 
+					<a th:href="@{'/hotels/chirag/' + ${h.hotelId} + '/reviews'(location=${location})}" 
 					   th:text="${h.name}" class="hotel-link"></a>
                 </td>
                 <td th:text="${h.location}"></td>
                 <td th:text="${h.description}"></td>
                 <td>
-                    <a th:href="@{'/hotels/edit/' + ${h.hotelId}(location=${location})}" class="btn-edit">Edit</a>
+                    <a th:href="@{'/hotels/chirag/edit/' + ${h.hotelId}(location=${location})}" class="btn-edit">Edit</a>
                 </td>
             </tr>
             <tr th:if="${#lists.isEmpty(hotels)}">
@@ -76,13 +76,13 @@
     </table>
     
     <div class="pagination" th:if="${totalPages > 1}">
-        <a th:if="${currentPage > 0}" th:href="@{/hotels(page=${currentPage - 1}, location=${location})}">« Prev</a>
+        <a th:if="${currentPage > 0}" th:href="@{/hotels/chirag(page=${currentPage - 1}, location=${location})}">« Prev</a>
         <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-            <a th:href="@{/hotels(page=${i}, location=${location})}" 
+            <a th:href="@{/hotels/chirag(page=${i}, location=${location})}" 
                th:text="${i + 1}" 
                th:classappend="${i == currentPage} ? 'active' : ''"></a>
         </span>
-        <a th:if="${currentPage < totalPages - 1}" th:href="@{/hotels(page=${currentPage + 1}, location=${location})}">Next »</a>
+        <a th:if="${currentPage < totalPages - 1}" th:href="@{/hotels/chirag(page=${currentPage + 1}, location=${location})}">Next »</a>
     </div>
 </div>
 </body>

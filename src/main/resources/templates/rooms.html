@@ -109,6 +109,9 @@
 		<td th:text="${room.hotel != null ? room.hotel.name : ''}"></td>
 		<td th:text="${room.hotel != null ? room.hotel.location : ''}"></td>
     </tr>
+	<tr th:if="${#lists.isEmpty(rooms)}">
+	                <td colspan="3" class="empty-msg">No rooms found</td>
+	</tr>
 	</tbody>
 </table>
 <div class="pagination">

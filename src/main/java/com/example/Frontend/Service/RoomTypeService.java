@@ -48,5 +48,12 @@ public class RoomTypeService {
             restTemplate.put(url, roomType);
         }
     }
+    public RoomTypeResponse getRoomTypes(int page) {
+        String BASE_URL = baseUrl +"/roomtypes";
+        String url = BASE_URL + "?page=" + page + "&size=20";
+        RoomTypeResponse response =
+                restTemplate.getForObject(url, RoomTypeResponse.class);
+        return response;
+    }
  
 }	
