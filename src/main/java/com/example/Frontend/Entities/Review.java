@@ -1,8 +1,10 @@
 package com.example.Frontend.Entities;
 
-import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.LocalDate;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Review {
 
 	private Integer rating;
@@ -10,6 +12,9 @@ public class Review {
 	private LocalDate reviewDate;
 	private String guestName;
 	private String hotelName;
+
+	public Review() {
+	}
 
 	public Integer getRating() {
 		return rating;
@@ -50,16 +55,4 @@ public class Review {
 	public void setHotelName(String hotelName) {
 		this.hotelName = hotelName;
 	}
-
-	public Review() {
-	}
-
-	public Review(Integer rating, String comment, LocalDate reviewDate, String guestName, String hotelName) {
-		this.rating = rating;
-		this.comment = comment;
-		this.reviewDate = reviewDate;
-		this.guestName = guestName;
-		this.hotelName = hotelName;
-	}
-	
 }
