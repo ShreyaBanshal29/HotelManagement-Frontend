@@ -21,14 +21,18 @@ public class RoomTypeController {
     private RoomTypeService service;
 
     @GetMapping
-    public String getRoomTypes(@RequestParam(defaultValue = "0") int page, Model model) {
+    public String getRoomTypes(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Double price,
+            @RequestParam(required = false) Integer occupancy,
+            Model model) {
 
-        RoomTypeResponse response = service.getRoomTypes(page);
+        RoomTypeResponse response = service.searchAll(keyword, price, occupancy, page);
 
         model.addAttribute("roomTypes", response.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", response.getPage().getTotalPages());
-
         return "roomtypes";
     }
     @GetMapping("/new")
@@ -50,5 +54,7 @@ public class RoomTypeController {
         service.saveRoomType(roomType);
         return "redirect:/roomtypes";
     }
+    
+    
    
 }

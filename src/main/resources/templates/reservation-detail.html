@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Reservation Detail')}"></head>
+<body>
+
+<nav th:replace="~{fragments/base :: navbar}"></nav>
+
+<main>
+    <div class="detail-hero">
+        <div class="detail-hero-inner page-wrapper">
+            <div class="detail-eyebrow">Reservation Detail</div>
+            <h1 th:text="${reservation != null ? reservation.guestName : 'Reservation'}">Guest Name</h1>
+            <div class="detail-hero-meta">
+                <div class="detail-meta-item">
+                    <span>Stay</span>
+                    <strong th:text="${reservation != null ? reservation.checkInDate + ' to ' + reservation.checkOutDate : ''}">Dates</strong>
+                </div>
+                <div class="detail-meta-item">
+                    <span>Room</span>
+                    <strong th:text="${room != null ? room.roomNumber : 'Not available'}">101</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <a th:href="@{/reservations}" class="back-link">Back to Reservations</a>
+
+        <div class="detail-body reservation-detail-grid">
+            <section class="reservation-panel">
+                <div class="section-heading">
+                    <h2>Guest</h2>
+                    <div class="section-heading-line"></div>
+                </div>
+                <dl class="detail-list">
+                    <dt>Name</dt>
+                    <dd th:text="${reservation.guestName}">Guest</dd>
+                    <dt>Email</dt>
+                    <dd th:text="${reservation.guestEmail ?: 'Not available'}">Email</dd>
+                    <dt>Phone</dt>
+                    <dd th:text="${reservation.guestPhone}">Phone</dd>
+                    <dt>Check In</dt>
+                    <dd th:text="${reservation.checkInDate}">Date</dd>
+                    <dt>Check Out</dt>
+                    <dd th:text="${reservation.checkOutDate}">Date</dd>
+                </dl>
+            </section>
+
+            <section class="reservation-panel">
+                <div class="section-heading">
+                    <h2>Room</h2>
+                    <div class="section-heading-line"></div>
+                </div>
+                <dl class="detail-list" th:if="${room != null}">
+                    <dt>Room ID</dt>
+                    <dd th:text="'#' + ${room.roomId}">#1</dd>
+                    <dt>Room Number</dt>
+                    <dd th:text="${room.roomNumber}">101</dd>
+                    <dt>Status</dt>
+                    <dd th:text="${room.isAvailable} ? 'Available' : 'Not Available'">Available</dd>
+                    <dt>Type</dt>
+                    <dd th:text="${roomType != null ? roomType.typeName : 'Not assigned'}">Deluxe</dd>
+                    <dt>Price</dt>
+                    <dd th:text="${roomType != null ? roomType.pricePerNight : 'Not available'}">0</dd>
+                </dl>
+                <p th:unless="${room != null}" class="reservation-muted">No room information found for this reservation.</p>
+            </section>
+
+            <section class="reservation-panel form-span">
+                <div class="section-heading">
+                    <h2>Hotel</h2>
+                    <div class="section-heading-line"></div>
+                </div>
+                <dl class="detail-list" th:if="${hotel != null}">
+                    <dt>Hotel ID</dt>
+                    <dd th:text="'#' + ${hotel.hotelId}">#1</dd>
+                    <dt>Name</dt>
+                    <dd th:text="${hotel.name}">Hotel</dd>
+                    <dt>Location</dt>
+                    <dd th:text="${hotel.location}">Location</dd>
+                    <dt>Description</dt>
+                    <dd th:text="${hotel.description}">Description</dd>
+                </dl>
+                <p th:unless="${hotel != null}" class="reservation-muted">No hotel information found for this reservation.</p>
+            </section>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/base :: footer}"></footer>
+</body>
+</html>

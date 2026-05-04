@@ -10,10 +10,8 @@
         }
 
         h2 {
-			margin-top: 10px;
             margin-bottom: 20px;
         }
-		
 
         .container {
             background: white;
@@ -44,41 +42,11 @@
             background-color: #dc3545;
             color: white;
         }
-		.search-form {
-		    display: flex;
-		    gap: 10px;
-		    align-items: center;
-		    flex-wrap: wrap;
-		    margin: 15px 0 20px 0;
-		}
 
-		.search-form input {
-		    padding: 10px 12px;
-		    border: 1px solid #ccc;
-		    border-radius: 6px;
-		    font-size: 14px;
-		    min-width: 180px;
-		    transition: all 0.2s ease;
-		}
-
-		.search-form input:focus {
-		    border-color: #007bff;
-		    outline: none;
-		    box-shadow: 0 0 4px rgba(0,123,255,0.3);
-		}
-
-		.btn-reset {
-		    background-color: #6c757d;
-		    color: white;
-		}
-
-		.btn-reset:hover {
-		    background-color: #5a6268;
-		}
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 8px;
+            margin-top: 20px;
         }
 
         th, td {
@@ -121,22 +89,11 @@
         <h2>Room Types</h2>
         <a th:href="@{/roomtypes/new}" class="btn btn-primary">+ Add Room Type</a>
     </div>
-	<form th:action="@{/roomtypes}" method="get" class="search-form">
 
-	    <input type="text" name="keyword" placeholder="🔍 Search by name"/>
-
-	    <input type="number" name="price" placeholder="💰 Max Price"/>
-
-	    <input type="number" name="occupancy" placeholder="👥 Min Occupancy"/>
-
-	    <button type="submit" class="btn btn-primary">Search</button>
-
-	    <a th:href="@{/roomtypes}" class="btn btn-reset">Reset</a>
-
-	</form>
     <table>
         <thead>
         <tr>
+			<th>Id</th>
 			<th>Name</th>
             <th>Description</th>
             <th>Price / Night</th>
@@ -147,8 +104,9 @@
 
         <tbody>
 			<tr th:each="room : ${roomTypes}"
-			    th:onclick="|window.location='rooms/byRoomId/' + ${room.roomTypeId}|"
+			    th:onclick="|window.location='/roomtypes/' + ${room.roomTypeId}|"
 			    style="cursor:pointer;">
+			<td th:text="${room.roomTypeId}"></td>
 			<td th:text="${room.typeName}"></td>
             <td th:text="${room.description}"></td>
             <td th:text="${room.pricePerNight}"></td>
@@ -163,15 +121,13 @@
 
     <!-- Pagination -->
     <div class="pagination">
-		<a th:if="${currentPage > 0}" 
-		   th:href="@{/roomtypes(page=${currentPage - 1}, keyword=${param.keyword}, price=${param.price}, occupancy=${param.occupancy})}">
-		   Previous
-		</a>
-		<span th:text="'Page ' + (${currentPage} + 1) + ' of ' + ${totalPages}"></span>
-		<a th:if="${currentPage < totalPages - 1}" 
-		   th:href="@{/roomtypes(page=${currentPage + 1}, keyword=${param.keyword}, price=${param.price}, occupancy=${param.occupancy})}">
-		   Next
-		</a>
+        <a th:if="${currentPage > 0}" 
+           th:href="@{/roomtypes(page=${currentPage - 1})}">Previous</a>
+
+        <span th:text="'Page ' + (${currentPage} + 1) + ' of ' + ${totalPages}"></span>
+
+        <a th:if="${currentPage < totalPages - 1}" 
+           th:href="@{/roomtypes(page=${currentPage + 1})}">Next</a>
     </div>
 
 </div>

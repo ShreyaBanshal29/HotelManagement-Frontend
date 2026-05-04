@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotel Reviews</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: #f5f5f5; }
+        .container { max-width: 1100px; margin: 40px auto; background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .page-header h1 { font-size: 1.8em; font-weight: 700; color: #111; }
+        .back-link { color: #1a73e8; text-decoration: none; font-weight: 500; }
+        .back-link:hover { text-decoration: underline; }
+        .hotel-info { background: #f9f9f9; padding: 15px 20px; border-radius: 8px; margin-bottom: 25px; }
+        .hotel-info h2 { color: #111; margin-bottom: 5px; font-size: 1.3em; }
+        .hotel-info .location { color: #666; margin-bottom: 8px; font-size: 13px; }
+        .hotel-info .desc { color: #555; line-height: 1.5; font-size: 14px; }
+        .reviews-list { display: grid; gap: 15px; margin-bottom: 25px; }
+        .review-card { border: 1px solid #eee; border-radius: 8px; padding: 18px; background: white; transition: box-shadow 0.2s; }
+        .review-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
+        .guest-name { font-weight: 600; color: #333; font-size: 16px; }
+        .rating { color: #f5a623; font-weight: 500; }
+        .comment { color: #555; margin-bottom: 12px; line-height: 1.5; }
+        .review-date { color: #999; font-size: 12px; }
+        .no-reviews { text-align: center; padding: 60px; color: #999; background: #f9f9f9; border-radius: 8px; margin-bottom: 25px; }
+        .no-reviews-icon { font-size: 48px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="page-header">
+        <h1>Hotel Reviews</h1>
+        <a th:href="@{/hotels/chirag(location=${location})}" class="back-link">← Back to Hotels</a>
+    </div>
+
+    <div class="hotel-info" th:if="${hotel != null}">
+        <h2 th:text="${hotel.name}"></h2>
+        <p class="location" th:text="'📍 ' + ${hotel.location}"></p>
+        <p class="desc" th:text="${hotel.description}"></p>
+    </div>
+
+    <!-- Show when no reviews -->
+    <div th:if="${reviews == null or reviews.isEmpty()}" class="no-reviews">
+        <div class="no-reviews-icon">📝</div>
+        <p>No reviews available for this hotel yet.</p>
+        <p style="font-size: 13px; margin-top: 10px;">Be the first to share your experience!</p>
+    </div>
+
+    <!-- Show when reviews exist -->
+    <div th:if="${reviews != null and not reviews.isEmpty()}" class="reviews-list">
+        <div th:each="review : ${reviews}" class="review-card">
+            <div class="review-header">
+                <span class="guest-name" th:text="${review.guestName}">Guest</span>
+                <span class="rating">
+                    <th:block th:if="${review.rating != null}">
+                        <span th:each="star : ${#numbers.sequence(1, review.rating)}">★</span>
+                        <span th:each="star : ${#numbers.sequence(review.rating + 1, 5)}">☆</span>
+                        <span th:text="' (' + ${review.rating} + '/5)'"></span>
+                    </th:block>
+                    <th:block th:if="${review.rating == null}">
+                        <span>No rating</span>
+                    </th:block>
+                </span>
+            </div>
+            <p class="comment" th:text="${review.comment}"></p>
+            <small class="review-date" th:text="${#temporals.format(review.reviewDate, 'MMMM dd, yyyy')}"></small>
+        </div>
+    </div>
+</div>
+</body>
+</html>

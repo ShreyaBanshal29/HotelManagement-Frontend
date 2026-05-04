@@ -52,13 +52,11 @@
 	       th, td {
 	           padding: 12px;
 	           border-bottom: 1px solid #ddd;
-	           text-align:left;
+	           text-align: left;
 	       }
-		   
 
 	       th {
 	           background-color: #f1f1f1;
-			   text-align: left;
 	       }
 
 	       tr:hover {
@@ -93,37 +91,32 @@
 <table>
 	<thead>
     <tr>
+        <th>ID</th>
         <th>Room Number</th>
         <th>Status</th>
 		<th>RoomType</th>
-		<th>Hotel Name</th>
-		<th>Location</th>
     </tr>
 	</thead>
 	<tbody>
 
     <tr th:each="room : ${rooms}">
-        <td th:text="${room.roomNumber}" style="padding-left: 50px;"></td>
-        <td th:text="${room.hotel != null ? room.isAvailable ? 'Available' : 'Not Available' : ''}"></td>
-		<td th:text="${room.roomType != null ? room.roomType.typeName : ''}"></td>
-		<td th:text="${room.hotel != null ? room.hotel.name : ''}"></td>
-		<td th:text="${room.hotel != null ? room.hotel.location : ''}"></td>
+        <td th:text="${room.roomId}"></td>
+        <td th:text="${room.roomNumber}"></td>
+        <td th:text="${room.isAvailable}"></td>
+		<td th:text="${room.roomType != null ? room.roomType.typeName : 'N/A'}"></td>
     </tr>
-	<tr th:if="${#lists.isEmpty(rooms)}">
-	                <td colspan="3" class="empty-msg">No rooms found</td>
-	</tr>
 	</tbody>
 </table>
 <div class="pagination">
     <a th:if="${currentPage > 0}" 
-       th:href="@{'/rooms/byRoomId/' + ${roomTypeId} + '?page=' + ${currentPage - 1}}">
+       th:href="@{'/roomtypes/' + ${roomTypeId}(page=${currentPage - 1})}">
         Previous
     </a>
 
     <span th:text="'Page ' + (${currentPage} + 1)"></span>
 
     <a th:if="${currentPage < totalPages - 1}" 
-       th:href="@{'/rooms/byRoomId/' + ${roomTypeId} + '?page=' + ${currentPage + 1}}">
+       th:href="@{'/roomtypes/' + ${roomTypeId}(page=${currentPage + 1})}">
         Next
     </a>
 </div>

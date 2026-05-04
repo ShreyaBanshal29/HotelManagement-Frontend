@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Reservations')}"></head>
+<body>
+
+<nav th:replace="~{fragments/base :: navbar}"></nav>
+
+<main class="page-wrapper">
+    <div class="page-header">
+        <div class="page-header-text">
+            <div class="page-eyebrow">Kush Workspace</div>
+            <h2>Reservations</h2>
+        </div>
+        <a th:href="@{/reservations/new}" class="btn btn-primary">+ New Reservation</a>
+    </div>
+
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+    <form th:action="@{/reservations}" method="get" class="reservation-filter">
+        <select name="filterBy" class="form-control reservation-filter-select">
+            <option value="guestName" th:selected="${filterBy == 'guestName'}">Guest Name</option>
+            <option value="guestPhone" th:selected="${filterBy == 'guestPhone'}">Guest Phone</option>
+            <option value="guestEmail" th:selected="${filterBy == 'guestEmail'}">Guest Email</option>
+            <option value="checkInDate" th:selected="${filterBy == 'checkInDate'}">Check In Date</option>
+            <option value="checkOutDate" th:selected="${filterBy == 'checkOutDate'}">Check Out Date</option>
+            <option value="roomId" th:selected="${filterBy == 'roomId'}">Room ID</option>
+        </select>
+        <input class="search-input" type="text" name="keyword" th:value="${keyword}"
+               placeholder="Search exact value, dates as YYYY-MM-DD">
+        <button class="btn btn-primary" type="submit">Search</button>
+        <a th:href="@{/reservations}" class="btn btn-outline">Clear</a>
+    </form>
+
+    <div class="hotel-table-wrap">
+        <table>
+            <thead>
+            <tr>
+                <th>Guest</th>
+                <th>Contact</th>
+                <th>Stay</th>
+                <th>Room</th>
+                <th>Hotel</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="clickable-row"
+                th:each="reservation : ${reservations}"
+                th:onclick="|location.href='@{/reservations/{id}(id=${reservation.reservationId})}'|">
+                <td>
+                    <span class="reservation-name" th:text="${reservation.guestName}">Guest Name</span>
+                </td>
+                <td>
+                    <div th:text="${reservation.guestPhone}">Phone</div>
+                    <div class="reservation-muted" th:text="${reservation.guestEmail}">Email</div>
+                </td>
+                <td>
+                    <div th:text="${reservation.checkInDate}">Check in</div>
+                    <div class="reservation-muted" th:text="'to ' + ${reservation.checkOutDate}">Check out</div>
+                </td>
+                <td>
+                    <span th:if="${reservation.room != null}"
+                          th:text="'Room ' + ${reservation.room.roomNumber} + ' (#' + ${reservation.room.roomId} + ')'">Room</span>
+                    <span th:unless="${reservation.room != null}">Not assigned</span>
+                </td>
+                <td th:text="${reservation.room != null and reservation.room.hotel != null ? reservation.room.hotel.name : 'Not available'}">Hotel</td>
+                <td class="td-actions">
+                    <a th:href="@{/reservations/{id}/edit(id=${reservation.reservationId})}"
+                       onclick="event.stopPropagation()"
+                       class="btn btn-primary btn-sm">Edit</a>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(reservations)}">
+                <td colspan="6" class="no-results">
+                    <p>No reservations found.</p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination" th:if="${totalPages > 1}">
+        <a class="page-btn"
+           th:if="${currentPage > 0}"
+           th:href="@{/reservations(page=${currentPage - 1}, filterBy=${filterBy}, keyword=${keyword})}">Prev</a>
+        <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+            <a class="page-btn"
+               th:href="@{/reservations(page=${i}, filterBy=${filterBy}, keyword=${keyword})}"
+               th:classappend="${i == currentPage} ? 'active' : ''"
+               th:text="${i + 1}">1</a>
+        </span>
+        <a class="page-btn"
+           th:if="${currentPage < totalPages - 1}"
+           th:href="@{/reservations(page=${currentPage + 1}, filterBy=${filterBy}, keyword=${keyword})}">Next</a>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/base :: footer}"></footer>
+</body>
+</html>

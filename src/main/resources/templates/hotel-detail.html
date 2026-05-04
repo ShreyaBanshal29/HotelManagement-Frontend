@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head(${hotel.name})}"></head>
+<body>
+
+<nav th:replace="~{fragments/base :: navbar}"></nav>
+
+<main>
+
+    <!-- Hotel Hero Banner -->
+    <div class="detail-hero">
+        <div class="detail-hero-inner page-wrapper">
+            <div class="detail-eyebrow">Hotel Detail</div>
+            <h1 th:text="${hotel.name}">Hotel Name</h1>
+            <div class="detail-hero-meta">
+                <div class="detail-meta-item">
+                    <span>📍</span>
+                    <strong th:text="${hotel.location}">Location</strong>
+                </div>
+
+                <div class="detail-meta-item">
+                    <span>🛏️</span>
+                    <strong th:text="${rooms != null ? #lists.size(rooms) + ' Rooms' : '0 Rooms'}"></strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+
+        <!-- Back link -->
+        <a th:href="@{/hotels}" class="back-link">← Back to Hotels</a>
+
+        <!-- Hotel Description -->
+        <div class="detail-body">
+            <p class="detail-desc" th:text="${hotel.description}">Description</p>
+
+            <!-- Rooms Section -->
+            <div class="section-heading">
+                <h2>Rooms</h2>
+                <div class="section-heading-line"></div>
+            </div>
+
+            <!-- No rooms state -->
+            <div th:if="${#lists.isEmpty(rooms)}" class="no-results">
+                <span>🛏️</span>
+                <p>No rooms found for this hotel.</p>
+            </div>
+
+            <!-- Rooms Grid -->
+            <div class="rooms-grid" th:unless="${#lists.isEmpty(rooms)}">
+                <div class="room-card" th:each="room : ${rooms}">
+
+                    <!-- Card Header: Room number + availability -->
+                    <div class="room-card-header">
+                        <div class="room-number-label">
+                            <small>Room</small>
+                            <span th:text="${room.roomNumber}">101</span>
+                        </div>
+                        <span class="room-status"
+                              th:classappend="${room.isAvailable} ? 'status-available' : 'status-occupied'">
+                            <span class="status-dot"></span>
+                            <span th:text="${room.isAvailable} ? 'Available' : 'Occupied'">Status</span>
+                        </span>
+                    </div>
+
+                    <!-- Card Body: Room type details inline -->
+                    <div class="room-card-body" th:if="${room.roomType != null}">
+                        <div class="room-type-badge"
+                             th:text="${room.roomType.typeName}">Type</div>
+
+                        <div class="room-type-name"
+                             th:text="${room.roomType.typeName}">Room Type Name</div>
+
+                        <div class="room-type-details">
+                            <div class="room-detail-item">
+                                <span class="room-detail-label">Max Occupancy</span>
+                                <span class="room-detail-value"
+                                      th:text="${room.roomType.maxOccupancy} + ' guests'">2 guests</span>
+                            </div>
+                            <div class="room-detail-item">
+                                <span class="room-detail-label">Room ID</span>
+                                <span class="room-detail-value"
+                                      th:text="'#' + ${room.roomId}">ID</span>
+                            </div>
+                        </div>
+
+                        <div class="room-price">
+                            ₹ <span th:text="${#numbers.formatDecimal(room.roomType.pricePerNight, 1, 'COMMA', 2, 'POINT')}">0.00</span>
+                            <small>/ night</small>
+                        </div>
+
+                        <p class="room-desc"
+                           th:if="${room.roomType.description != null and !#strings.isEmpty(room.roomType.description)}"
+                           th:text="${room.roomType.description}">Description</p>
+                    </div>
+
+                    <!-- Fallback if no room type -->
+                    <div class="room-card-body" th:unless="${room.roomType != null}">
+                        <p class="room-desc">No room type assigned.</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/base :: footer}"></footer>
+</body>
+</html>

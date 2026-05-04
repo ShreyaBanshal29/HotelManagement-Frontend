@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head(${pageTitle})}"></head>
+<body>
+
+<nav th:replace="~{fragments/base :: navbar}"></nav>
+
+<main class="page-wrapper reservation-form-page">
+    <a th:href="@{/reservations}" class="back-link">Back to Reservations</a>
+
+    <div class="reservation-panel">
+        <div class="modal-header">
+            <div>
+                <div class="modal-title-eyebrow" th:text="${mode == 'edit' ? 'Edit Booking' : 'Create Booking'}">Create Booking</div>
+                <div class="modal-title" th:text="${mode == 'edit' ? 'Update reservation' : 'New reservation'}">New reservation</div>
+            </div>
+        </div>
+
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+        <form th:action="${mode == 'edit'} ? ${formAction} : @{/reservations}"
+              th:object="${reservationForm}" method="post">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label" for="guestName">Guest Name</label>
+                    <input id="guestName" class="form-control" type="text" th:field="*{guestName}" required minlength="2" maxlength="50">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="guestPhone">Guest Phone</label>
+                    <input id="guestPhone" class="form-control" type="tel" th:field="*{guestPhone}" required pattern="^[6-9][0-9]{9}$">
+                </div>
+
+                <div class="form-group form-span">
+                    <label class="form-label" for="guestEmail">Guest Email</label>
+                    <input id="guestEmail" class="form-control" type="email" th:field="*{guestEmail}" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="checkInDate">Check In</label>
+                    <input id="checkInDate" class="form-control" type="date" th:field="*{checkInDate}" th:min="${today}" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="checkOutDate">Check Out</label>
+                    <input id="checkOutDate" class="form-control" type="date" th:field="*{checkOutDate}" th:min="${today}" required>
+                </div>
+
+                <div class="form-group form-span" th:if="${mode == 'create'}">
+                    <label class="form-label" for="roomId">Existing Room</label>
+                    <select id="roomId" class="form-control" th:field="*{roomId}" required>
+                        <option value="">Select a room already in the system</option>
+                        <option th:each="room : ${rooms}"
+                                th:value="${room.roomId}"
+                                th:text="${'Room ' + room.roomNumber + ' (#' + room.roomId + ') - ' + (room.hotel != null ? room.hotel.name : 'Hotel unavailable')}">
+                            Room 101
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group form-span" th:if="${mode == 'edit'}">
+                    <label class="form-label">Room</label>
+                    <input type="hidden" th:field="*{roomId}">
+                    <div class="locked-room">
+                        <strong th:text="${reservation.room != null ? 'Room ' + reservation.room.roomNumber + ' (#' + reservation.room.roomId + ')' : 'Room not available'}">Room</strong>
+                        <span>Room assignment is locked for edits.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a th:href="@{/reservations}" class="btn btn-outline">Cancel</a>
+                <button class="btn btn-primary" type="submit" th:text="${mode == 'edit' ? 'Save Changes' : 'Create Reservation'}">Save</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/base :: footer}"></footer>
+</body>
+</html>

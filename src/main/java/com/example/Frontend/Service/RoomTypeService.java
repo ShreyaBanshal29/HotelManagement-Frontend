@@ -1,6 +1,7 @@
 package com.example.Frontend.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.example.Frontend.Entities.RoomType;
@@ -11,18 +12,24 @@ public class RoomTypeService {
 
     @Autowired
     private RestTemplate restTemplate;
+    @Value("${backend.base-url}")
+   String baseUrl;
 
-    private final String BASE_URL = "http://localhost:8085/api/roomtypes";
+    public RoomTypeResponse searchAll(String name, Double price, Integer occupancy, int page) {
 
-    public RoomTypeResponse getRoomTypes(int page) {
-    	String url = BASE_URL + "?page=" + page + "&size=20";
-        RoomTypeResponse response =
-            restTemplate.getForObject(url, RoomTypeResponse.class);
+        String BASE_URL = baseUrl +"/roomtypes";
+    	String url = BASE_URL + "/search/searchAll?" +
+    	        (name != null ? "name=" + name + "&" : "") +
+    	        (price != null ? "price=" + price + "&" : "") +
+    	        (occupancy != null ? "occupancy=" + occupancy + "&" : "") +
+    	        "page=" + page+"&size=12";
 
-
-        return response;
+        return restTemplate.getForObject(url, RoomTypeResponse.class);
     }
+    
     public RoomType getRoomTypeById(int id) {
+
+        String BASE_URL = baseUrl +"/roomtypes";
         String url = BASE_URL + "/" + id;
         RoomType room = restTemplate.getForObject(url, RoomType.class);
         room.setRoomTypeId(id);
@@ -30,6 +37,8 @@ public class RoomTypeService {
     }
     
     public void saveRoomType(RoomType roomType) {
+
+        String BASE_URL = baseUrl +"/roomtypes";
         if (roomType.getRoomTypeId() == null) {
             // CREATE
             restTemplate.postForObject(BASE_URL, roomType, RoomType.class);
@@ -39,4 +48,12 @@ public class RoomTypeService {
             restTemplate.put(url, roomType);
         }
     }
+    public RoomTypeResponse getRoomTypes(int page) {
+        String BASE_URL = baseUrl +"/roomtypes";
+        String url = BASE_URL + "?page=" + page + "&size=20";
+        RoomTypeResponse response =
+                restTemplate.getForObject(url, RoomTypeResponse.class);
+        return response;
+    }
+ 
 }	
