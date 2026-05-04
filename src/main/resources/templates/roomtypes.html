@@ -15,12 +15,14 @@
         }
 		
 
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
-        }
+		.container {
+		    max-width: 1200px;
+		    margin: 40px auto;
+		    background: white;
+		    border-radius: 8px;
+		    padding: 30px;
+		    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+		}
 
         .btn {
             padding: 8px 14px;
@@ -33,6 +35,7 @@
         .btn-primary {
             background-color: #007bff;
             color: white;
+			border: 1px solid #007bff;
         }
 
         .btn-warning {
@@ -101,15 +104,37 @@
             align-items: center;
         }
 
-        .pagination {
-            margin-top: 20px;
-        }
+		.pagination {
+		    display: flex;
+		    justify-content: center;
+		    gap: 10px;
+		    margin-top: 24px;
+		    flex-wrap: wrap;
+		}
 
-        .pagination a {
-            margin-right: 10px;
-            text-decoration: none;
-            color: #007bff;
-        }
+		.pagination a {
+		    padding: 6px 10px;
+		    text-decoration: none;
+		    color: #1a73e8;
+		    font-size: 14px;
+		    border: none;
+		}
+
+		.pagination a:hover {
+		    text-decoration: underline;
+		}
+
+		.pagination span {
+		    font-size: 14px;
+		    color: #555;
+		    padding: 6px 10px;
+		}
+		
+		.pagination a.active {
+		    font-weight: bold;
+		    color: #111;
+		}
+		
     </style>
 </head>
 
@@ -122,17 +147,11 @@
         <a th:href="@{/roomtypes/new}" class="btn btn-primary">+ Add Room Type</a>
     </div>
 	<form th:action="@{/roomtypes}" method="get" class="search-form">
-
-	    <input type="text" name="keyword" placeholder="🔍 Search by name"/>
-
-	    <input type="number" name="price" placeholder="💰 Max Price"/>
-
-	    <input type="number" name="occupancy" placeholder="👥 Min Occupancy"/>
-
+	    <input type="text" name="keyword" th:value="${param.keyword}" placeholder="🔍 Search by name"/>
+	    <input type="number" name="price" th:value="${param.price}" placeholder="💰 Max Price"/>
+	    <input type="number" name="occupancy" th:value="${param.occupancy}" placeholder="👥 Min Occupancy"/>
 	    <button type="submit" class="btn btn-primary">Search</button>
-
 	    <a th:href="@{/roomtypes}" class="btn btn-reset">Reset</a>
-
 	</form>
     <table>
         <thead>
@@ -147,32 +166,41 @@
 
         <tbody>
 			<tr th:each="room : ${roomTypes}"
+			    th:if="${room.roomTypeId != null}"
 			    th:onclick="|window.location='rooms/byRoomId/' + ${room.roomTypeId}|"
 			    style="cursor:pointer;">
-			<td th:text="${room.typeName}"></td>
-            <td th:text="${room.description}"></td>
-            <td th:text="${room.pricePerNight}"></td>
-            <td th:text="${room.maxOccupancy}"></td>
-			<td onclick="event.stopPropagation()">
-			    <a th:href="@{'/roomtypes/edit/' + ${room.roomTypeId}}" 
-			       class="btn btn-warning">Edit</a>
-			</td>
-        </tr>
+				<td th:text="${room.typeName}"></td>
+	            <td th:text="${room.description}"></td>
+	            <td th:text="${room.pricePerNight}"></td>
+	            <td th:text="${room.maxOccupancy}"></td>
+				<td onclick="event.stopPropagation()">
+				    <a th:href="@{'/roomtypes/edit/' + ${room.roomTypeId}}" 
+				       class="btn btn-warning">Edit</a>
+				</td>
+        	</tr>
+			<tr th:if="${roomTypes == null or #lists.isEmpty(roomTypes) or roomTypes[0].roomTypeId == null}">
+			    <td colspan="5" class="empty-msg">No room types found</td>
+			</tr>
         </tbody>
     </table>
 
     <!-- Pagination -->
-    <div class="pagination">
-		<a th:if="${currentPage > 0}" 
-		   th:href="@{/roomtypes(page=${currentPage - 1}, keyword=${param.keyword}, price=${param.price}, occupancy=${param.occupancy})}">
-		   Previous
-		</a>
-		<span th:text="'Page ' + (${currentPage} + 1) + ' of ' + ${totalPages}"></span>
-		<a th:if="${currentPage < totalPages - 1}" 
-		   th:href="@{/roomtypes(page=${currentPage + 1}, keyword=${param.keyword}, price=${param.price}, occupancy=${param.occupancy})}">
-		   Next
-		</a>
-    </div>
+	<div class="pagination" th:if="${totalPages > 1}">
+	    <a th:if="${currentPage > 0}"
+	       th:href="@{/roomtypes(page=${currentPage - 1}, keyword=${param.keyword}, price=${param.price}, occupancy=${param.occupancy})}">
+	       « Prev
+	    </a>
+	    <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+	        <a th:href="@{/roomtypes(page=${i}, keyword=${param.keyword}, price=${param.price}, occupancy=${param.occupancy})}"
+	           th:text="${i + 1}"
+	           th:classappend="${i == currentPage} ? ' active' : ''">
+	        </a>
+	    </span>
+	    <a th:if="${currentPage < totalPages - 1}"
+	       th:href="@{/roomtypes(page=${currentPage + 1}, keyword=${param.keyword}, price=${param.price}, occupancy=${param.occupancy})}">
+	       Next »
+	    </a>
+	</div>
 
 </div>
 

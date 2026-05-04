@@ -153,17 +153,15 @@
 
     <!-- Header -->
     <div class="page-header">
-        <h1 th:text="'Hotels with ' + ${hotelAmenities[0].amenity.name}"></h1>
+        <h1 th:text="'Hotels with ' + ${amenityName}"></h1>
         <a th:href="@{/amenities}" class="back-link">← Back to Amenities</a>
     </div>
 
     <!-- Amenity Name -->
-	<div class="amenity-info" th:if="${!#lists.isEmpty(hotelAmenities)}">
+	<div class="amenity-info">
 	    <p class="amenity-label">Amenity</p>
-	    <h2 th:text="${hotelAmenities[0].amenity.name}"></h2>
-	    <p class="desc"
-	       th:text="${hotelAmenities[0].amenity.description != null ? hotelAmenities[0].amenity.description : 'No description available'}">
-	    </p>
+	    <h2 th:text="${amenityName}"></h2>
+	    <p class="desc" th:text="${amenityDescription != null ? amenityDescription : 'No description available'}"></p>
 	</div>
 
     <!-- Table -->
@@ -178,7 +176,8 @@
 
         <tbody>
 
-            <tr th:each="ha : ${hotelAmenities}">
+			<tr th:each="ha : ${hotelAmenities}"
+			    th:if="${ha.hotel != null}">
                 <td>
                     <span class="hotel-name"
                           th:text="${ha.hotel != null ? ha.hotel.name : ''}">
@@ -190,9 +189,9 @@
                 <td th:text="${ha.hotel != null ? ha.hotel.description : ''}"></td>
             </tr>
 
-            <tr th:if="${#lists.isEmpty(hotelAmenities)}">
-                <td colspan="3" class="empty-msg">No hotels found</td>
-            </tr>
+			<tr th:if="${hotelAmenities == null or #lists.isEmpty(hotelAmenities) or hotelAmenities[0].hotel == null}">
+			    <td colspan="3" class="empty-msg">No hotels found for this amenity</td>
+			</tr>
 
         </tbody>
     </table>

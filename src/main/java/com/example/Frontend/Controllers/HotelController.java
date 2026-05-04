@@ -70,11 +70,20 @@ public class HotelController {
         Hotel hotel = service.getHotelById(id);
         List<Room> rooms = service.getRoomsByHotel(id);
 
+
+        if (rooms != null) {
+            rooms = rooms.stream()
+                         .filter(r -> r.getRoomNumber() != null)
+                         .collect(java.util.stream.Collectors.toList());
+        }
+
+        System.out.println("Filtered rooms size: " + (rooms != null ? rooms.size() : "null"));
+
         model.addAttribute("hotel", hotel);
         model.addAttribute("rooms", rooms);
         model.addAttribute("location", location);
 
-        return "hotel-detail"; // 🔥 your HTML
+        return "hotel-detail";
     }
     @GetMapping("/{id}/amenities")
     public String getAmenitiesByHotel(@PathVariable int id,
