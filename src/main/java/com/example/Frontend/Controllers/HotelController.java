@@ -22,7 +22,6 @@ public class HotelController {
 
     @Autowired
     private HotelService service;
-    RoomTypeService rs;
 
     private static final String DEFAULT_LOCATION = "Mumbai";
 
@@ -69,7 +68,7 @@ public class HotelController {
                              Model model) {
 
         Hotel hotel = service.getHotelById(id);
-        List<Room> rooms = service.getRoomsByHotel(id,page);
+        List<Room> rooms = service.getRoomsByHotel(id);
 
         model.addAttribute("hotel", hotel);
         model.addAttribute("rooms", rooms);

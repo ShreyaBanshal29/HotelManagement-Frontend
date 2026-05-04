@@ -10,12 +10,43 @@ public class RoomPagedModel {
 
     @JsonProperty("content")
     private List<Room> content;
+    @JsonProperty("_embedded")
+    private RoomEmbedded embedded;
+
+    
+    // public List<Room> getRooms() {
+    //     return content != null ? content : List.of();
+    // }
 
     public List<Room> getRooms() {
-        return content != null ? content : List.of();
+        if (content != null) {
+            return content;
+        }
+        return embedded != null ? embedded.getRoom() : List.of();
     }
 
     public void setContent(List<Room> content) {
         this.content = content;
+    }
+
+    public RoomEmbedded getEmbedded() {
+        return embedded;
+    }
+
+    public void setEmbedded(RoomEmbedded embedded) {
+        this.embedded = embedded;
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class RoomEmbedded {
+        private List<Room> room;
+
+        public List<Room> getRoom() {
+            return room != null ? room : List.of();
+        }
+
+        public void setRoom(List<Room> room) {
+            this.room = room;
+        }
     }
 }
