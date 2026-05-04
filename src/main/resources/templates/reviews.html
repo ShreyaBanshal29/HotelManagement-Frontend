@@ -31,7 +31,7 @@
 <div class="container">
     <div class="page-header">
         <h1>Hotel Reviews</h1>
-        <a th:href="@{/hotels/chirag(location=${location})}" class="back-link">← Back to Hotels</a>
+        <a th:href="@{/hotels(location=${location}, type='reviews')}" class="back-link">← Back to Hotels</a>
     </div>
 
     <div class="hotel-info" th:if="${hotel != null}">

@@ -2,164 +2,46 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Hotels</title>
-
+    <title>Hotel Amenities</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-        }
-
-        body {
-            background: #f5f5f5;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 40px auto;
-            background: white;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .page-header h1 {
-            font-size: 1.8em;
-            font-weight: 700;
-            color: #111;
-        }
-
-        .btn-back {
-            padding: 8px 18px;
-            background: #1a73e8;
-            color: white;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .btn-back:hover {
-            background: #1558b0;
-        }
-
-        .subtitle {
-            margin-bottom: 20px;
-        }
-
-        .subtitle-label {
-            display: block;
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 2px;
-        }
-
-        .subtitle-value {
-            font-size: 18px;
-            font-weight: 600;
-            color: #111;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead tr {
-            background: #f0f0f0;
-        }
-
-        th {
-            padding: 13px 16px;
-            text-align: left;
-            font-size: 14px;
-            font-weight: 600;
-            color: #333;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        td {
-            padding: 13px 16px;
-            font-size: 14px;
-            border-bottom: 1px solid #eee;
-            color: #444;
-        }
-
-        tbody tr:hover {
-            background: #fafafa;
-        }
-
-        .hotel-name {
-            color: #1a73e8;
-            font-weight: 500;
-        }
-
-        .empty-msg {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-            font-size: 15px;
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-            margin-top: 24px;
-            flex-wrap: wrap;
-        }
-
-        .pagination a {
-            padding: 7px 13px;
-            border: 1px solid #ddd;
-            color: #333;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        .pagination a:hover {
-            background: #f0f0f0;
-        }
-
-        .pagination a.active {
-            background: #1a73e8;
-            color: white;
-            border-color: #1a73e8;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body { background: #f5f5f5; }
+        .container { max-width: 1100px; margin: 40px auto; background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .page-header h1 { font-size: 1.8em; font-weight: 700; color: #111; }
+        .back-link { color: #1a73e8; text-decoration: none; font-weight: 500; }
+        .back-link:hover { text-decoration: underline; }
+        .hotel-info { background: #f9f9f9; padding: 15px 20px; border-radius: 8px; margin-bottom: 25px; }
+        .hotel-label { font-size: 12px; color: #888; margin-bottom: 3px; }
+        .hotel-info h2 { color: #111; margin-bottom: 5px; font-size: 1.3em; }
+        .hotel-info .desc { color: #555; font-size: 14px; line-height: 1.5; }
+        table { width: 100%; border-collapse: collapse; }
+        thead tr { background: #f0f0f0; }
+        th { padding: 13px 16px; text-align: left; font-size: 14px; font-weight: 600; color: #333; border-bottom: 1px solid #e0e0e0; }
+        td { padding: 13px 16px; font-size: 14px; border-bottom: 1px solid #eee; color: #444; }
+        tbody tr:hover { background: #fafafa; }
+        .amenity-name { color: #1a73e8; font-weight: 500; }
+        .empty-msg { text-align: center; padding: 40px; color: #999; font-size: 15px; }
+        .pagination { display: flex; justify-content: center; gap: 6px; margin-top: 24px; flex-wrap: wrap; }
+        .pagination a { padding: 7px 13px; border: 1px solid #ddd; color: #333; text-decoration: none; border-radius: 4px; font-size: 14px; }
+        .pagination a:hover { background: #f0f0f0; }
+        .pagination a.active { background: #1a73e8; color: white; border-color: #1a73e8; }
     </style>
 </head>
-
 <body>
-
 <div class="container">
 
     <!-- Header -->
     <div class="page-header">
-        <h1>Hotels</h1>
-        <a th:href="@{/hotels}" class="btn-back">← Back</a>
+        <h1 th:text="${hotel != null ? 'Amenities of ' + hotel.name : 'Hotel Amenities'}"></h1>
+        <a th:href="@{/hotels(location=${location}, type='amenities')}" class="back-link">← Back to Hotels</a>
     </div>
 
-    <!-- Amenity Name -->
-    <div class="subtitle"
-         th:if="${hotelAmenities != null and !#lists.isEmpty(hotelAmenities)}">
-
-        <span class="subtitle-label">Hotel</span>
-        <span class="subtitle-value"
-		th:text="${hotelAmenities != null and !#lists.isEmpty(hotelAmenities) 
-		          and hotelAmenities[0].hotel != null 
-		          ? hotelAmenities[0].hotel.name 
-		          : 'N/A'}">
-        </span>
+    <!-- Hotel Info -->
+    <div class="hotel-info" th:if="${hotel != null}">
+        <p class="hotel-label">Hotel</p>
+        <h2 th:text="${hotel.name}"></h2>
+        <p class="desc" th:text="${hotel.description != null ? hotel.description : 'No description available'}"></p>
     </div>
 
     <!-- Table -->
@@ -170,49 +52,35 @@
                 <th>Description</th>
             </tr>
         </thead>
-
         <tbody>
-
-            <tr th:each="ha : ${hotelAmenities}">
+            <tr th:each="ha : ${hotelAmenities}" th:if="${ha.amenity != null}">
                 <td>
-                    <span class="amenity-name"
-                          th:text="${ha.amenity != null ? ha.amenity.name : ''}">
-                    </span>
+                    <span class="amenity-name" th:text="${ha.amenity.name}"></span>
                 </td>
-
-                <td th:text="${ha.amenity != null ? ha.amenity.description : ''}"></td>
+                <td th:text="${ha.amenity.description != null ? ha.amenity.description : '—'}"></td>
             </tr>
 
-            <tr th:if="${#lists.isEmpty(hotelAmenities)}">
-                <td colspan="3" class="empty-msg">No hotels found</td>
-            </tr>
-
+			<tr th:if="${hotelAmenities == null or #lists.isEmpty(hotelAmenities)}">
+			    <td colspan="2" class="empty-msg">No amenities found for this hotel.</td>
+			</tr>
         </tbody>
     </table>
 
     <!-- Pagination -->
     <div class="pagination" th:if="${totalPages > 1}">
-
         <a th:if="${currentPage > 0}"
-           th:href="@{'/hotels/' + ${hotelId} + '/amenities(page=${currentPage - 1})'}">
-           « Prev
-        </a>
+           th:href="@{'/hotels/' + ${hotelId} + '/amenities'(page=${currentPage - 1}, location=${location})}">« Prev</a>
 
         <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-            <a th:href="@{'/hotels/' + ${hotelId} + '/amenities(page=${i})'}"
+            <a th:href="@{'/hotels/' + ${hotelId} + '/amenities'(page=${i}, location=${location})}"
                th:text="${i + 1}"
-               th:classappend="${i == currentPage} ? ' active' : ''">
-            </a>
+               th:classappend="${i == currentPage} ? ' active' : ''"></a>
         </span>
 
         <a th:if="${currentPage < totalPages - 1}"
-           th:href="@{'/hotels/' + ${hotelId} + '/amenities(page=${currentPage + 1})'}">
-           Next »
-        </a>
-
+           th:href="@{'/hotels/' + ${hotelId} + '/amenities'(page=${currentPage + 1}, location=${location})}">Next »</a>
     </div>
 
 </div>
-
 </body>
 </html>

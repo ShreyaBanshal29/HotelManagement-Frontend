@@ -53,12 +53,16 @@ public class HotelController {
         model.addAttribute("location", activeLocation);
         model.addAttribute("type", type); // 🔥 KEY
         
+        if ("amenities".equals(type)) return "hotels-ishank";
+        if ("rooms".equals(type)) return "hotels-trishu";
+        
         return "hotels-chirag";
     }
 
     @GetMapping("/add")
-    public String showAddForm(@RequestParam(required = false) String location, Model model) {
+    public String showAddForm(@RequestParam(required = false) String location,@RequestParam(defaultValue = "reviews") String type,  Model model) {
         model.addAttribute("location", location != null ? location : DEFAULT_LOCATION);
+        model.addAttribute("type", type);
         return "add-hotel";
     }
     @GetMapping("/{id}/rooms")
@@ -70,33 +74,46 @@ public class HotelController {
         Hotel hotel = service.getHotelById(id);
         List<Room> rooms = service.getRoomsByHotel(id);
 
+
+        if (rooms != null) {
+            rooms = rooms.stream()
+                         .filter(r -> r.getRoomNumber() != null)
+                         .collect(java.util.stream.Collectors.toList());
+        }
+
+        System.out.println("Filtered rooms size: " + (rooms != null ? rooms.size() : "null"));
+
         model.addAttribute("hotel", hotel);
         model.addAttribute("rooms", rooms);
         model.addAttribute("location", location);
 
-        return "hotel-detail"; // 🔥 your HTML
+        return "hotel-detail";
     }
     @GetMapping("/{id}/amenities")
     public String getAmenitiesByHotel(@PathVariable int id,
-    		@RequestParam(required = false) String location,
-                                    @RequestParam(defaultValue = "0") int page,
-                                    Model model) {
+                                      @RequestParam(required = false) String location,
+                                      @RequestParam(defaultValue = "0") int page,
+                                      Model model) {
 
-        HotelAmenityResponse response =
-                service.getAmenitiesByHotel(page, id);
+        HotelAmenityResponse response = service.getAmenitiesByHotel(page, id);
 
         List<HotelAmenity> hotelAmenities =
                 (response != null && response.getContent() != null)
                 ? response.getContent()
                 : Collections.emptyList();
-        Hotel hotel = (!hotelAmenities.isEmpty())
-                ? hotelAmenities.get(0).getHotel()
-                : null;
+        
+
+        hotelAmenities = hotelAmenities.stream()
+                .filter(ha -> ha.getAmenity() != null)
+                .collect(java.util.stream.Collectors.toList());
+
+        Hotel hotel = service.getHotelById(id);
+        
 
         model.addAttribute("hotel", hotel);
         model.addAttribute("hotelAmenities", hotelAmenities);
         model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", response.getPage().getTotalPages());
+        model.addAttribute("totalPages", response != null ? response.getPage().getTotalPages() : 0);
         model.addAttribute("hotelId", id);
         model.addAttribute("location", location);
 
@@ -107,7 +124,8 @@ public class HotelController {
     public String addHotel(@RequestParam String name,
                           @RequestParam String location,
                           @RequestParam String description,
-                          @RequestParam(required = false) String locationParam) {
+                          @RequestParam(required = false) String locationParam,
+                          @RequestParam(defaultValue = "reviews") String typeParam) {
         
         Hotel hotel = new Hotel();
         hotel.setName(name);
@@ -118,13 +136,13 @@ public class HotelController {
         
         String loc = (locationParam != null && !locationParam.trim().isEmpty()) 
                 ? locationParam : DEFAULT_LOCATION;
-        
-        return "redirect:/hotels?location=" + loc;
+        return "redirect:/hotels?location=" + loc + "&type=" + typeParam;
     }
 
     @GetMapping("/edit/{id}")
     public String editHotelForm(@PathVariable Integer id,
                                 @RequestParam(required = false) String location,
+                                @RequestParam(defaultValue = "reviews") String type,
                                 Model model) {
         
         System.out.println("EDIT HOTEL ID: " + id);
@@ -138,6 +156,7 @@ public class HotelController {
         
         model.addAttribute("hotel", hotel);
         model.addAttribute("location", location != null ? location : DEFAULT_LOCATION);
+        model.addAttribute("type", type);
         return "edit-hotel";
     }
 
@@ -146,7 +165,8 @@ public class HotelController {
                              @RequestParam String name,
                              @RequestParam String location,
                              @RequestParam String description,
-                             @RequestParam(required = false) String locationParam) {
+                             @RequestParam(required = false) String locationParam,
+                             @RequestParam(defaultValue = "reviews") String typeParam) {
         
         System.out.println("UPDATING HOTEL ID: " + id);
         
@@ -161,6 +181,6 @@ public class HotelController {
         String loc = (locationParam != null && !locationParam.trim().isEmpty()) 
                 ? locationParam : DEFAULT_LOCATION;
         
-        return "redirect:/hotels?location=" + loc;
+        return "redirect:/hotels?location=" + loc + "&type=" + typeParam;
     }
 }

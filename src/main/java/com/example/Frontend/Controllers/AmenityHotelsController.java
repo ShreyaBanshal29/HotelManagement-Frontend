@@ -34,7 +34,17 @@ public class AmenityHotelsController {
                 (response != null && response.getContent() != null)
                 ? response.getContent()
                 : Collections.emptyList();
+        
+        String amenityName = (!hotelAmenities.isEmpty() && hotelAmenities.get(0).getAmenity() != null)
+                ? hotelAmenities.get(0).getAmenity().getName()
+                : service.getAmenityById(id).getName();
 
+        String amenityDescription = (!hotelAmenities.isEmpty() && hotelAmenities.get(0).getAmenity() != null)
+                ? hotelAmenities.get(0).getAmenity().getDescription()
+                : service.getAmenityById(id).getDescription();
+
+        model.addAttribute("amenityName", amenityName);
+        model.addAttribute("amenityDescription", amenityDescription);
         model.addAttribute("hotelAmenities", hotelAmenities);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", response.getPage().getTotalPages());
