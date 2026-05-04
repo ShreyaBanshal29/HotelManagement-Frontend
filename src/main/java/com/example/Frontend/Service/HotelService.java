@@ -160,9 +160,9 @@ public class HotelService {
         restTemplate.postForObject(BASE_URL, entity, Void.class);
         System.out.println("CREATED HOTEL");
     }
-    public List<Room> getRoomsByHotel(Integer hotelId) {
-        String url = baseUrl + "/room/search/findByHotel_HotelId?hotelId=" + hotelId
-                + "&size=100";
+    public List<Room> getRoomsByHotel(Integer hotelId,int page) {
+        String url = baseUrl + "/room/search/findByHotel_HotelId?hotelId=" + hotelId+ "&page=" + page
+                + "&size=10";
         RoomPagedModel model = restTemplate.getForObject(url, RoomPagedModel.class);
         if (model == null) return List.of();
         List<Room> rooms = model.getRooms();

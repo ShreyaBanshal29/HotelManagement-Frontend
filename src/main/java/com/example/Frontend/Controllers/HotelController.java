@@ -65,10 +65,11 @@ public class HotelController {
     @GetMapping("/{id}/rooms")
     public String hotelRooms(@PathVariable Integer id,
                              @RequestParam(required = false) String location,
+                             @RequestParam(defaultValue = "0") int page,
                              Model model) {
 
         Hotel hotel = service.getHotelById(id);
-        List<Room> rooms = service.getRoomsByHotel(id);
+        List<Room> rooms = service.getRoomsByHotel(id,page);
 
         model.addAttribute("hotel", hotel);
         model.addAttribute("rooms", rooms);
