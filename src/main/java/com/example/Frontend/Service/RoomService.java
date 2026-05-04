@@ -1,5 +1,7 @@
 package com.example.Frontend.Service;
 
+import com.example.Frontend.Entities.Room;
+import com.example.Frontend.dtos.RoomPagedModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
