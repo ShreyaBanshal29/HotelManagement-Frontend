@@ -54,7 +54,8 @@
             <tr><th>Hotel Name</th><th>Location</th><th>Description</th><th>Actions</th></tr>
         </thead>
         <tbody>
-            <tr th:each="h : ${hotels}">
+			<tr th:each="h : ${hotels}"
+			    th:if="${h.hotelId != null}">
                 <td>
                     <!-- Hotel name links to reviews page with location parameter -->
 					<a th:href="@{'/hotels/' + ${h.hotelId} + '/' + ${type}(location=${location})}"
@@ -67,7 +68,7 @@
                     <a th:href="@{'/hotels/edit/' + ${h.hotelId}(location=${location})}" class="btn-edit">Edit</a>
                 </td>
             </tr>
-            <tr th:if="${#lists.isEmpty(hotels)}">
+            <tr th:if="${hotels == null or #lists.isEmpty(hotels) or hotels[0].hotelId == null}">
                 <td colspan="4" class="empty-msg">
                     No hotels found for "<span th:text="${location}"></span>". 
                     Try a different location above.
