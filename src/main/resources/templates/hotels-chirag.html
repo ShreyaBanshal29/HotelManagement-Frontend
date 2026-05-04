@@ -39,7 +39,7 @@
 <div class="container">
     <div class="page-header">
         <h1>Hotels</h1>
-        <a th:href="@{/hotels/add(location=${location})}" class="btn-add">+ Add Hotel</a>
+        <a th:href="@{/hotels/add(location=${location}, type=${type})}" class="btn-add">+ Add Hotel</a>
     </div>
     
 	<form th:action="@{/hotels}" method="get" class="location-bar">
@@ -66,7 +66,7 @@
                 <td th:text="${h.location}"></td>
                 <td th:text="${h.description}"></td>
                 <td>
-                    <a th:href="@{'/hotels/edit/' + ${h.hotelId}(location=${location})}" class="btn-edit">Edit</a>
+                    <a th:href="@{'/hotels/edit/' + ${h.hotelId}(location=${location}, type=${type})}" class="btn-edit">Edit</a>
                 </td>
             </tr>
             <tr th:if="${hotels == null or #lists.isEmpty(hotels) or hotels[0].hotelId == null}">
