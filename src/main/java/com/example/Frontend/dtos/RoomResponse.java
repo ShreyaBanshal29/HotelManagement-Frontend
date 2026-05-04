@@ -33,4 +33,5 @@ public class RoomResponse {
                 ", page=" + page +
                 '}';
     }
+    //nothing changed
 }
