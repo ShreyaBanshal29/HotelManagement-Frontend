@@ -38,36 +38,44 @@
             color: #111;
         }
 
-        .btn-back {
-            padding: 8px 18px;
-            background: #1a73e8;
-            color: white;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-        }
+        .back-link {
+		    color: #1a73e8;
+		    text-decoration: none;
+		    font-weight: 500;
+		}
+
+		.back-link:hover {
+		    text-decoration: underline;
+		}
 
         .btn-back:hover {
             background: #1558b0;
         }
 
-        .subtitle {
-            margin-bottom: 20px;
-        }
+		.amenity-info {
+		    background: #f9f9f9;
+		    padding: 15px 20px;
+		    border-radius: 8px;
+		    margin-bottom: 25px;
+		}
 
-        .subtitle-label {
-            display: block;
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 2px;
-        }
+		.amenity-label {
+		    font-size: 12px;
+		    color: #888;
+		    margin-bottom: 3px;
+		}
 
-        .subtitle-value {
-            font-size: 18px;
-            font-weight: 600;
-            color: #111;
-        }
+		.amenity-info h2 {
+		    color: #111;
+		    margin-bottom: 5px;
+		    font-size: 1.3em;
+		}
+
+		.amenity-info .desc {
+		    color: #555;
+		    font-size: 14px;
+		    line-height: 1.5;
+		}
 
         table {
             width: 100%;
@@ -145,19 +153,18 @@
 
     <!-- Header -->
     <div class="page-header">
-        <h1>Hotels</h1>
-        <a th:href="@{/amenities}" class="btn-back">← Back</a>
+        <h1 th:text="'Hotels with ' + ${hotelAmenities[0].amenity.name}"></h1>
+        <a th:href="@{/amenities}" class="back-link">← Back to Amenities</a>
     </div>
 
     <!-- Amenity Name -->
-    <div class="subtitle"
-         th:if="${!#lists.isEmpty(hotelAmenities)}">
-
-        <span class="subtitle-label">Amenity</span>
-        <span class="subtitle-value"
-              th:text="${hotelAmenities[0].amenity.name}">
-        </span>
-    </div>
+	<div class="amenity-info" th:if="${!#lists.isEmpty(hotelAmenities)}">
+	    <p class="amenity-label">Amenity</p>
+	    <h2 th:text="${hotelAmenities[0].amenity.name}"></h2>
+	    <p class="desc"
+	       th:text="${hotelAmenities[0].amenity.description != null ? hotelAmenities[0].amenity.description : 'No description available'}">
+	    </p>
+	</div>
 
     <!-- Table -->
     <table>
