@@ -22,7 +22,6 @@ public class HotelController {
 
     @Autowired
     private HotelService service;
-    RoomTypeService rs;
 
     private static final String DEFAULT_LOCATION = "Mumbai";
 

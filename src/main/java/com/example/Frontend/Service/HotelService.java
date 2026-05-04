@@ -161,8 +161,7 @@ public class HotelService {
         System.out.println("CREATED HOTEL");
     }
     public List<Room> getRoomsByHotel(Integer hotelId) {
-        String url = baseUrl + "/room/search/findByHotel_HotelId?hotelId=" + hotelId
-                + "&size=100";
+        String url = baseUrl + "/room/search/findByHotel_HotelId?hotelId=" + hotelId;
         RoomPagedModel model = restTemplate.getForObject(url, RoomPagedModel.class);
         if (model == null) return List.of();
         List<Room> rooms = model.getRooms();
