@@ -26,11 +26,13 @@
 <div class="container">
     <div class="page-header">
         <h1>Add New Hotel</h1>
-        <a th:href="@{/hotels(location=${location})}" class="back-link">← Back to Hotels</a>
+        <a th:href="@{/hotels(location=${location}, type=${type})}" class="back-link">← Back to Hotels</a>
     </div>
 
     <form th:action="@{/hotels/add}" method="post">
         <input type="hidden" name="locationParam" th:value="${location}">
+		<input type="hidden" name="typeParam" th:value="${type}">
+
 
         <div class="form-group">
             <label>Hotel Name</label>
@@ -49,7 +51,7 @@
 
         <div class="form-actions">
             <button type="submit" class="btn-save">Add Hotel</button>
-            <a th:href="@{/hotels(location=${location})}" class="btn-cancel">Cancel</a>
+            <a th:href="@{/hotels(location=${location}, type=${type})}" class="btn-cancel">Cancel</a>
         </div>
     </form>
 </div>

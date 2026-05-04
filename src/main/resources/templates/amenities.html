@@ -190,22 +190,23 @@
 
         <tbody>
 
-            <tr th:each="am : ${amenities}"
-                th:onclick="|window.location='/amenities/' + ${am.amenityId} + '/hotels'|">
+			<tr th:each="am : ${amenities}"
+			    th:if="${am.amenityId != null}"
+			    th:onclick="|window.location='/amenities/' + ${am.amenityId} + '/hotels'|">
 
-                <td th:text="${am.name}" style="color: #1a73e8; font-weight: bold;"></td>
-                <td th:text="${am.description}"></td>
+			    <td th:text="${am.name}" style="color: #1a73e8; font-weight: bold;"></td>
+			    <td th:text="${am.description}"></td>
 
-                <td onclick="event.stopPropagation()">
-                    <a th:href="@{'/amenities/edit/' + ${am.amenityId}}" 
-                       class="btn-edit">Edit</a>
-                </td>
+			    <td onclick="event.stopPropagation()">
+			        <a th:href="@{'/amenities/edit/' + ${am.amenityId}}" 
+			           class="btn-edit">Edit</a>
+			    </td>
 
-            </tr>
+			</tr>
 
-            <tr th:if="${#lists.isEmpty(amenities)}">
-                <td colspan="3" class="empty-msg">No amenities found</td>
-            </tr>
+			<tr th:if="${amenities == null or #lists.isEmpty(amenities) or amenities[0].amenityId == null}">
+			    <td colspan="3" class="empty-msg">No amenities found</td>
+			</tr>
 
         </tbody>
     </table>

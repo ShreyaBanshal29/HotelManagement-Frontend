@@ -57,7 +57,7 @@
         <tbody>
             <tr th:each="h : ${hotels}">
                 <td>
-                    <!-- Hotel name links to rooms page with location parameter -->
+                    <!-- Hotel name links to amenities page with location parameter -->
 					<a th:href="@{'/hotels/' + ${h.hotelId} + '/' + ${type}(location=${location})}"
 					   th:text="${h.name}" class="hotel-link"></a>
                 </td>
