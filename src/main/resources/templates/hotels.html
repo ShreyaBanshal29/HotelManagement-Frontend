@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/base :: head('Hotels')}"></head>
+<body>
+
+<nav th:replace="~{fragments/base :: navbar}"></nav>
+
+<main>
+    <div class="page-wrapper">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-header-text">
+                <div class="page-eyebrow">Manage Properties</div>
+                <h2>Our Hotels</h2>
+            </div>
+            <button class="btn btn-primary" onclick="openModal('createModal')">
+                + Add Hotel
+            </button>
+        </div>
+
+        <!-- Alert Messages -->
+        <div th:if="${successMsg}" class="alert alert-success">
+            ✓ <span th:text="${successMsg}"></span>
+        </div>
+        <div th:if="${errorMsg}" class="alert alert-error">
+            ✕ <span th:text="${errorMsg}"></span>
+        </div>
+
+        <!-- Controls Bar: Search + Filter -->
+        <div class="controls-bar">
+            <form class="search-form" th:action="@{/hotels}" method="get">
+                <input
+                        class="search-input"
+                        type="text"
+                        name="search"
+                        th:value="${search}"
+                        placeholder="Search by name or location…"
+                        autocomplete="off"
+                />
+                <input type="hidden" name="page" value="0"/>
+                <button class="search-btn" type="submit" title="Search">&#128269;</button>
+            </form>
+            <a th:href="@{/hotels}" class="btn btn-outline" th:if="${search != null and !#strings.isEmpty(search)}">
+                ✕ Clear
+            </a>
+        </div>
+
+        <!-- Hotels Table -->
+        <div class="hotel-table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Hotel Name</th>
+                    <th>Location</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(hotels.content)}">
+                    <td colspan="5">
+                        <div class="no-results">
+                            <span>🏨</span>
+                            <p>No hotels found. Add your first property above.</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:each="hotel : ${hotels.content}">
+                    <td><span class="badge-id" th:text="${hotel.hotelId}"></span></td>
+                    <td class="td-name" th:text="${hotel.name}"></td>
+                    <td class="td-location" th:text="${hotel.location}"></td>
+                    <td class="td-desc" th:text="${hotel.description}"></td>
+                    <td class="td-actions">
+                        <a th:href="@{/hotels/{id}(id=${hotel.hotelId})}"
+                           class="btn btn-outline btn-sm">View</a>
+                        <button class="btn btn-outline btn-sm edit-btn"
+                                th:data-id="${hotel.hotelId}"
+                                th:data-name="${hotel.name}"
+                                th:data-location="${hotel.location}"
+                                th:data-description="${hotel.description}"
+                                onclick="openEditFromData(this)">
+                            Edit
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Info -->
+        <p class="page-info" th:if="${hotels.totalElements > 0}">
+            Showing
+            <span th:text="${hotels.number * hotels.size + 1}"></span>–<span
+                th:text="${hotels.number * hotels.size + hotels.numberOfElements}"></span>
+            of <span th:text="${hotels.totalElements}"></span> hotels
+        </p>
+
+        <!-- Pagination Controls -->
+        <nav class="pagination" th:if="${hotels.totalPages > 1}">
+            <!-- Previous -->
+            <a class="page-btn"
+               th:classappend="${hotels.first} ? 'disabled'"
+               th:href="@{/hotels(page=${hotels.number - 1}, search=${search})}">&#8592;</a>
+
+            <!-- Page Numbers -->
+            <th:block th:each="i : ${#numbers.sequence(0, hotels.totalPages - 1)}">
+                <a class="page-btn"
+                   th:classappend="${i == hotels.number} ? 'active'"
+                   th:href="@{/hotels(page=${i}, search=${search})}"
+                   th:text="${i + 1}"></a>
+            </th:block>
+
+            <!-- Next -->
+            <a class="page-btn"
+               th:classappend="${hotels.last} ? 'disabled'"
+               th:href="@{/hotels(page=${hotels.number + 1}, search=${search})}">&#8594;</a>
+        </nav>
+
+    </div>
+</main>
+
+<footer th:replace="~{fragments/base :: footer}"></footer>
+
+<!-- ==========================================
+     CREATE HOTEL MODAL
+     ========================================== -->
+<div class="modal-overlay" id="createModal">
+    <div class="modal">
+        <div class="modal-header">
+            <div>
+                <div class="modal-title-eyebrow">New Property</div>
+                <div class="modal-title">Add Hotel</div>
+            </div>
+            <button class="modal-close" onclick="closeModal('createModal')">✕</button>
+        </div>
+        <form th:action="@{/hotels/create}" method="post">
+            <div class="form-group">
+                <label class="form-label">Hotel Name</label>
+                <input class="form-control" type="text" name="name"
+                       placeholder="e.g. The Grand Palace" required minlength="2" maxlength="50"/>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Location</label>
+                <input class="form-control" type="text" name="location"
+                       placeholder="e.g. Mumbai, India" required minlength="2" maxlength="100"/>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea class="form-control" name="description"
+                          placeholder="Brief description of the hotel…"
+                          required minlength="5" maxlength="200"></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-outline" onclick="closeModal('createModal')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Create Hotel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ==========================================
+     EDIT HOTEL MODAL
+     ========================================== -->
+<div class="modal-overlay" id="editModal">
+    <div class="modal">
+        <div class="modal-header">
+            <div>
+                <div class="modal-title-eyebrow">Update Property</div>
+                <div class="modal-title">Edit Hotel</div>
+            </div>
+            <button class="modal-close" onclick="closeModal('editModal')">✕</button>
+        </div>
+        <form id="editForm" method="post">
+            <input type="hidden" name="_method" value="PUT"/>
+            <input type="hidden" id="editHotelId" name="hotelId"/>
+            <div class="form-group">
+                <label class="form-label">Hotel Name</label>
+                <input class="form-control" type="text" id="editName" name="name"
+                       required minlength="2" maxlength="50"/>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Location</label>
+                <input class="form-control" type="text" id="editLocation" name="location"
+                       required minlength="2" maxlength="100"/>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea class="form-control" id="editDescription" name="description"
+                          required minlength="5" maxlength="200"></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-outline" onclick="closeModal('editModal')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openModal(id) {
+        document.getElementById(id).classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    function openEditFromData(btn) {
+        openEditModal(
+            btn.dataset.id,
+            btn.dataset.name,
+            btn.dataset.location,
+            btn.dataset.description
+        );
+    }
+
+    function openEditModal(id, name, location, description) {
+        document.getElementById('editForm').action = '/hotels/' + id + '/update';
+        document.getElementById('editHotelId').value = id;
+        document.getElementById('editName').value = name;
+        document.getElementById('editLocation').value = location;
+        document.getElementById('editDescription').value = description;
+        openModal('editModal');
+    }
+
+    // Close modal on overlay click
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', function(e) {
+            if (e.target === this) closeModal(this.id);
+        });
+    });
+
+    // Reopen create modal if validation failed
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('openCreate') === 'true') openModal('createModal');
+</script>
+</body>
+</html>
