@@ -36,6 +36,7 @@
     </style>
 </head>
 <body>
+	<nav th:replace="~{fragments/base :: navbar}"></nav>
 <div class="container">
     <div class="page-header">
         <h1>Hotels</h1>
@@ -88,5 +89,6 @@
 		<a th:if="${currentPage < totalPages - 1}" th:href="@{/hotels(page=${currentPage + 1}, location=${location}, type=${type})}">Next »</a>
     </div>
 </div>
+<footer th:replace="~{fragments/base :: footer}"></footer>
 </body>
 </html>
