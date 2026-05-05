@@ -123,6 +123,16 @@
         <h1 th:text="${amenity.amenityId == null} ? 'Add Amenity' : 'Edit Amenity'"></h1>
         <a th:href="@{/amenities}" class="back-link">← Back to Amenities</a>
     </div>
+	
+	<div th:if="${error}" style="
+	    background: #fce8e6;
+	    color: #c0392b;
+	    border: 1px solid #f5c6cb;
+	    border-radius: 6px;
+	    padding: 12px 16px;
+	    margin-bottom: 18px;
+	    font-size: 14px;
+	" th:text="${error}"></div>
 
     <!-- Form -->
     <form th:action="@{/amenities/save}" th:object="${amenity}" method="post">
