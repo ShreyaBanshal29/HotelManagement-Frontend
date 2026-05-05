@@ -52,9 +52,15 @@ public class AmenityController {
 
     // SAVE (ADD + UPDATE)
     @PostMapping("/save")
-    public String saveAmenity(@ModelAttribute Amenity amenity) {
-        service.saveAmenity(amenity);
-        return "redirect:/amenities";
+    public String saveAmenity(@ModelAttribute Amenity amenity, Model model) {
+        try {
+            service.saveAmenity(amenity);
+            return "redirect:/amenities";
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("amenity", amenity);
+            return "amenity-form";
+        }
     }
 	    
 }
