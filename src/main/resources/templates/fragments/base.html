@@ -1,39 +1,52 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
-<!-- ── HEAD fragment ──────────────────────────────────────────────────── -->
-<head th:fragment="head(title)">
+<head>
     <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title th:text="${title} + ' | LuxStay Hotels'">LuxStay Hotels</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com"/>
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap"
-          rel="stylesheet"/>
-    <link rel="stylesheet" th:href="@{/css/main.css}"/>
 </head>
+<body>
 
 <!-- ── NAVBAR fragment ────────────────────────────────────────────────── -->
-<nav th:fragment="navbar">
-    <div class="nav-inner">
-        <a th:href="@{/}" class="nav-logo">
-            <span class="nav-logo-icon">🏨</span> LuxStay
-        </a>
-        <div class="nav-links">
-            <a th:href="@{/}" class="nav-link">Team</a>
-            <a th:href="@{/hotels}" class="nav-link">Hotels</a>
+<nav th:fragment="navbar" style="
+    background: white;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0 30px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+">
+    <div style="max-width: 1200px; width: 100%; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+        <h1 style="
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #111;
+            text-decoration: none;
+            letter-spacing: 0.3px;
+        ">Hotel Management | Group:1</h1>
+        <div>
+            <a th:href="@{/}" style="
+                color: #1a73e8;
+                text-decoration: none;
+                font-size: 14px;
+                font-weight: 500;
+            ">Home</a>
         </div>
     </div>
 </nav>
 
 <!-- ── FOOTER fragment ────────────────────────────────────────────────── -->
-<footer th:fragment="footer">
-    <div class="footer-inner">
-        <div class="footer-brand">
-            <span>🏨</span> LuxStay Hotels
-        </div>
-        <div class="footer-sub">Hotel Management System &copy; 2025</div>
-    </div>
+<footer th:fragment="footer" style="
+    margin-top: 60px;
+    border-top: 1px solid #e0e0e0;
+    padding: 20px 30px;
+    text-align: center;
+    background: white;
+">
+    <div style="font-size: 13px; color: #999;">Hotel Management System &copy; 2026</div>
 </footer>
 
+</body>
 </html>

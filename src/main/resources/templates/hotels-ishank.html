@@ -35,6 +35,7 @@
         .pagination a.active { background: #1a73e8; color: white; border-color: #1a73e8; }
     </style>
 </head>
+<nav th:replace="~{fragments/base :: navbar}"></nav>
 <body>
 <div class="container">
     <div class="page-header">
@@ -88,4 +89,5 @@
     </div>
 </div>
 </body>
+<footer th:replace="~{fragments/base :: footer}"></footer>
 </html>
